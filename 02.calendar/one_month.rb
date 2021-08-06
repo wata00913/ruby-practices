@@ -3,8 +3,6 @@ require 'date'
 # 月間を表すクラス
 # 年月を引数にわたしてその月の週や週の数などを取得
 class OneMonth
-  attr_reader :year, :month
-
   def initialize(year, month)
     raise ArgumentError, "year `#{year}` not in range 1..9999" unless valid_year?(year)
 
@@ -20,7 +18,7 @@ class OneMonth
   # 月間に含まれる週ごとの日付を要素とするArrayオブジェクトを返す
   # 週の日付の並び順は日曜日の日付を始めとして土曜日の日付を格納
   # 曜日に紐づく日付が存在しない場合の要素はnil
-  def weeks
+  def each_week
     @weeks.each { |week| yield week.values }
   end
 

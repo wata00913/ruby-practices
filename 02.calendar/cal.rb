@@ -8,16 +8,9 @@ def cal
   today = Date.today
   # オプションから年と月を取得。
   # 引数がない場合は今日の年または月を取得
-  month = if opt.key?(:m)
-            opt[:m]
-          else
-            today.month
-          end
-  year = if opt.key?(:y)
-           opt[:y]
-         else
-           today.year
-         end
+  month = opt[:m] || today.month
+  year = opt[:y] || today.year
+
   begin
     one_month = OneMonth.new(year, month)
   rescue ArgumentError => e
@@ -52,7 +45,7 @@ def draw_day_of_week
 end
 
 def draw_weeks(month)
-  month.weeks { |week| draw_week(week) }
+  month.each_week { |week| draw_week(week) }
 end
 
 def draw_week(week)
@@ -66,11 +59,8 @@ def displayed_day(day)
   return '  ' if day.nil?
 
   # 日付の文字数が1文字の場合は空白を追加して幅を調整
-  if day < 10
-    " #{day}"
-  else
-    day.to_s
-  end
+  padding_width = day < 10 ? 2 : 0
+  day.to_s.rjust(padding_width)
 end
 
 cal
