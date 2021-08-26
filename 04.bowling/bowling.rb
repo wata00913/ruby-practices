@@ -62,7 +62,7 @@ def calc_score
     end
   end
   frames = to_frames(scores)
-  p frames
+  puts score(frames, 10)
 end
 
 def to_frames(scores)
