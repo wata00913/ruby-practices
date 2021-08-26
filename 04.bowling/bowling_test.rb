@@ -39,4 +39,19 @@ class BowlingTest < Minitest::Test
     input = [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], ['X'], [9, 1]]
     assert_equal 78, score(input, 6)
   end
+
+  def test_10フレームまでのスコア
+    input = [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], ['X'], [9, 1], [8, 0], ['X'], [6, 3]]
+    assert_equal 132, score(input, 10)
+  end
+
+  def test_10フレームまでのスコアでかつ10フレーム目にストライクを含む
+    input = [[6, 3], [9, 0], [0, 3], [8, 2], [7, 3], ['X'], [9, 1], [8, 0], ['X'], ['X', 6, 4]]
+    assert_equal 150, score(input, 10)
+  end
+
+  def test_全てストライクの場合のスコア
+    input = [['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], ['X'], %w[X X X]]
+    assert_equal 300, score(input, 10)
+  end
 end
