@@ -27,8 +27,8 @@ end
 def frame_score(frames, to)
   # offset指定をしたいので、mapでEnumeratorに変換する
   (1..to).map.with_index(0).inject(0) do |score, (ith_throw, idx)|
-    current_frame = Frame.new(frames[idx])
-    next_frame = Frame.new(frames[idx + 1])
+    current_frame = get_frqme(frames, idx)
+    next_frame = get_frqme(frames, idx + 1)
     added_score = if ith_throw == 10
                     last_frame_score(current_frame)
                   elsif current_frame.strike?
@@ -42,6 +42,12 @@ def frame_score(frames, to)
   end
 end
 
+# frameをカプセル化
+# 後でframesの要素をFrameインスタンスにするため
+def get_frqme(frames, idx)
+  Frame.new(frames[idx])
+end
+
 def normal_score(frame)
   frame.number_of_down_pins
 end
@@ -51,9 +57,9 @@ def spare_score(next_frame)
 end
 
 def strike_score(frames, next_ith_frame, next_idx)
-  next_frame = Frame.new(frames[next_idx])
+  next_frame = get_frqme(frames, next_idx)
   if next_frame.strike? && next_ith_frame < 10
-    after_next_frame = Frame.new(frames[next_idx + 1])
+    after_next_frame = get_frqme(frames, next_idx + 1)
     10 + 10 + after_next_frame.number_of_down_pins(1)
   else
     # 次の投球がストライク以外または次のフレームが10フレーム目の場合
