@@ -28,26 +28,26 @@ def frame_score(frames, to)
   # offset指定をしたいので、mapでEnumeratorに変換する
   (1..to).map.with_index(0).inject(0) do |score, (i_th_frame, idx)|
     current_frame = Frame.new(frames[idx])
+    next_frame = Frame.new(frames[idx + 1])
     added_score = if i_th_frame == 10
-                    last_frame_score(frames[idx])
+                    last_frame_score(current_frame)
                   elsif current_frame.strike?
                     strike_score(frames, i_th_frame + 1, idx + 1)
                   elsif current_frame.spare?
-                    spare_score(frames[idx + 1])
+                    spare_score(next_frame)
                   else
-                    normal_score(frames[idx])
+                    normal_score(current_frame)
                   end
     score + added_score
   end
 end
 
 def normal_score(frame)
-  frame.sum
+  frame.number_of_down_pins
 end
 
 def spare_score(next_frame)
-  frame = Frame.new(next_frame)
-  10 + frame.number_of_down_pins(1)
+  10 + next_frame.number_of_down_pins(1)
 end
 
 def strike_score(frames, next_i_th_frame, next_idx)
@@ -62,7 +62,6 @@ def strike_score(frames, next_i_th_frame, next_idx)
 end
 
 def last_frame_score(last_frame)
-  last_frame = Frame.new(last_frame)
   last_frame.number_of_down_pins
 end
 
