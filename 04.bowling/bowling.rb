@@ -16,9 +16,9 @@ class Frame
     @scores.sum == 10
   end
 
-  def number_of_down_pins(i_throw = 0)
-    # ストライクの場合はi_throwの引数に限らず要素数が1
-    sub_scores = @scores[0..(i_throw - 1)]
+  def number_of_down_pins(ith_throw = 0)
+    # ストライクの場合はith_throwの引数に限らず要素数が1
+    sub_scores = @scores[0..(ith_throw - 1)]
     sub_scores.inject(0) { |num, score| score == STRIKE ? num + 10 : num + score }
   end
 end
@@ -26,13 +26,13 @@ end
 
 def frame_score(frames, to)
   # offset指定をしたいので、mapでEnumeratorに変換する
-  (1..to).map.with_index(0).inject(0) do |score, (i_th_frame, idx)|
+  (1..to).map.with_index(0).inject(0) do |score, (ith_throw, idx)|
     current_frame = Frame.new(frames[idx])
     next_frame = Frame.new(frames[idx + 1])
-    added_score = if i_th_frame == 10
+    added_score = if ith_throw == 10
                     last_frame_score(current_frame)
                   elsif current_frame.strike?
-                    strike_score(frames, i_th_frame + 1, idx + 1)
+                    strike_score(frames, ith_throw + 1, idx + 1)
                   elsif current_frame.spare?
                     spare_score(next_frame)
                   else
@@ -50,9 +50,9 @@ def spare_score(next_frame)
   10 + next_frame.number_of_down_pins(1)
 end
 
-def strike_score(frames, next_i_th_frame, next_idx)
+def strike_score(frames, next_ith_frame, next_idx)
   next_frame = Frame.new(frames[next_idx])
-  if next_frame.strike? && next_i_th_frame < 10
+  if next_frame.strike? && next_ith_frame < 10
     after_next_frame = Frame.new(frames[next_idx + 1])
     10 + 10 + after_next_frame.number_of_down_pins(1)
   else
@@ -81,16 +81,16 @@ end
 
 def to_frames(scores)
   frames = []
-  n_throw = 1
+  nth_throw = 1
   (1..N).each do |i|
     frame = []
     loop do
-      score = scores[n_throw - 1]
+      score = scores[nth_throw - 1]
       frame << score
-      n_throw += 1
+      nth_throw += 1
       break if i < 10 && (score == STRIKE || frame.length == 2)
 
-      break if i == 10 && n_throw > scores.length
+      break if i == 10 && nth_throw > scores.length
     end
     frames << frame
   end
