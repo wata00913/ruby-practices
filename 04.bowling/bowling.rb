@@ -27,7 +27,7 @@ class Bowling
   attr_reader :frames
 
   def initialize(scores_per_frame)
-    @frames = get_frames(scores_per_frame)
+    @frames = to_frames(scores_per_frame)
   end
 
   def frame_score(to)
@@ -50,7 +50,7 @@ class Bowling
 
   private
 
-  def get_frames(scores_per_frame)
+  def to_frames(scores_per_frame)
     scores_per_frame.map { |el| Frame.new(el) }
   end
 
