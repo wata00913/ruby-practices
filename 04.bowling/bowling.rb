@@ -26,8 +26,8 @@ end
 class Bowling
   attr_reader :frames
 
-  def initialize(frames)
-    @frames = frames
+  def initialize(scores_per_frame)
+    @frames = get_frames(scores_per_frame)
   end
 
   def frame_score(to)
@@ -49,6 +49,10 @@ class Bowling
   end
 
   private
+
+  def get_frames(scores_per_frame)
+    scores_per_frame.map { |el| Frame.new(el) }
+  end
 
   def normal_score(frame)
     frame.number_of_down_pins
@@ -78,14 +82,9 @@ class Bowling
   end
 end
 
-def frame_score(frames, to)
-  xx_frames = get_xx_frames(frames)
-  bowling = Bowling.new(xx_frames)
+def frame_score(scores_per_frame, to)
+  bowling = Bowling.new(scores_per_frame)
   bowling.frame_score(to)
-end
-
-def get_xx_frames(frames)
-  frames.map { |el| Frame.new(el) }
 end
 
 def game_score
@@ -97,13 +96,13 @@ def game_score
       i.to_i
     end
   end
-  frames = to_frames(all_scores)
+  scores_per_frame = to_scores_per_frame(all_scores)
   # 10フレーム目のスコアを求める
-  puts frame_score(frames, 10)
+  puts frame_score(scores_per_frame, 10)
 end
 
-def to_frames(all_scores)
-  frames = []
+def to_scores_per_frame(all_scores)
+  scores_per_frames = []
   nth_throw = 1
   (1..N).each do |i|
     scores = []
@@ -115,9 +114,9 @@ def to_frames(all_scores)
 
       break if i == 10 && nth_throw > all_scores.length
     end
-    frames << scores
+    scores_per_frames << scores
   end
-  frames
+  scores_per_frames
 end
 
 game_score if $0 == __FILE__
