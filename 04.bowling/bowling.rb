@@ -18,6 +18,8 @@ class Frame
     @scores.sum == 10
   end
 
+  # フレーム内で倒したピンの数
+  # 引数で何投目までかを指定。フレーム内の全投球を指定する場合は0
   def number_of_down_pins(ith_throw = 0)
     # ストライクの場合はith_throwの引数に限らず要素数が1
     sub_scores = @scores[0..(ith_throw - 1)]
@@ -32,6 +34,7 @@ class Bowling
     @frames = to_frames(scores_per_frame)
   end
 
+  # 1投目から引数で指定したフレーム数までのスコアを計算
   def frame_score(to)
     # offset指定をしたいので、mapでEnumeratorに変換する
     (1..to).map.with_index(0).inject(0) do |score, (ith_frame, idx)|
@@ -56,14 +59,17 @@ class Bowling
     scores_per_frame.map { |el| Frame.new(el) }
   end
 
+  # スペア、ストライクを除いた1フレームの通常のスコアを計算
   def normal_score(frame)
     frame.number_of_down_pins
   end
 
+  # 1フレームのスペアのスコアを計算
   def spare_score(next_frame)
     10 + next_frame.number_of_down_pins(1)
   end
 
+  # 1フレームのストライクのスコアを計算
   def strike_score(next_ith_frame, next_idx)
     next_frame = get_frame(next_idx)
     if next_frame.strike? && next_ith_frame < 10
@@ -76,6 +82,7 @@ class Bowling
     end
   end
 
+  # 最後のフレーム(10フレーム目)のスコアを計算
   def last_frame_score(last_frame)
     last_frame.number_of_down_pins
   end
@@ -100,7 +107,7 @@ def game_score
     end
   end
   scores_per_frame = to_scores_per_frame(all_scores)
-  # 10フレーム目のスコアを求める
+  # 10フレーム目までのスコアを求める
   puts frame_score(scores_per_frame, 10)
 end
 
