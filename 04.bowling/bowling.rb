@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 N = 10
 STRIKE = 'X'
 
@@ -120,4 +122,4 @@ def to_scores_per_frame(all_scores)
   scores_per_frames
 end
 
-game_score if $0 == __FILE__
+game_score if $PROGRAM_NAME == __FILE__
