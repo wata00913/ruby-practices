@@ -4,7 +4,6 @@ FRAME_NUM = 10
 STRIKE = 'X'
 
 class Frame
-  attr_reader :scores
   MAX_PINS = 10
 
   def initialize(scores)
@@ -30,7 +29,6 @@ end
 
 class Bowling
   MAX_FRAME_SCORE = 10
-  attr_reader :frames
 
   def initialize(scores_per_frame)
     @frames = to_frames(scores_per_frame)
