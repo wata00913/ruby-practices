@@ -113,18 +113,19 @@ end
 
 def to_scores_per_frame(all_scores)
   scores_per_frames = []
-  nth_throw = 1
+  from = 0
   (1..FRAME_NUM).each do |i|
-    scores = []
-    loop do
-      score = all_scores[nth_throw - 1]
-      scores << score
-      nth_throw += 1
-      break if i < FRAME_NUM && (score == STRIKE || scores.length == 2)
+    to = if i == FRAME_NUM
+           all_scores.length - 1
+         elsif all_scores[from] == STRIKE
+           from
+         else
+           from + 1
+         end
 
-      break if i == FRAME_NUM && nth_throw > all_scores.length
-    end
-    scores_per_frames << scores
+    scores_per_frames << all_scores[from..to]
+    # 次のフレームの最初の投球番目(オフセットは0)を更新
+    from = to + 1
   end
   scores_per_frames
 end
