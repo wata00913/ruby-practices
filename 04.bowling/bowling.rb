@@ -38,8 +38,8 @@ class Bowling
   def frame_score(to)
     # offset指定をしたいので、mapでEnumeratorに変換する
     (1..to).map.with_index(0).inject(0) do |score, (ith_frame, idx)|
-      current_frame = get_frame(idx)
-      next_frame = get_frame(idx + 1)
+      current_frame = @frames[idx]
+      next_frame = @frames[idx + 1]
       added_score = if ith_frame == FRAME_NUM
                       last_frame_score(current_frame)
                     elsif current_frame.strike?
@@ -71,9 +71,9 @@ class Bowling
 
   # 1フレームのストライクのスコアを計算
   def strike_score(next_ith_frame, next_idx)
-    next_frame = get_frame(next_idx)
+    next_frame = @frames[next_idx]
     if next_frame.strike? && next_ith_frame < FRAME_NUM
-      after_next_frame = get_frame(next_idx + 1)
+      after_next_frame = @frames[next_idx + 1]
       MAX_FRAME_SCORE * 2 + after_next_frame.number_of_down_pins(1)
     elsif next_ith_frame == FRAME_NUM
       MAX_FRAME_SCORE + next_frame.number_of_down_pins(2)
@@ -85,10 +85,6 @@ class Bowling
   # 最後のフレーム(10フレーム目)のスコアを計算
   def last_frame_score(last_frame)
     last_frame.number_of_down_pins
-  end
-
-  def get_frame(idx)
-    @frames[idx]
   end
 end
 
