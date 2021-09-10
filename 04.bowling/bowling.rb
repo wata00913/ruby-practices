@@ -108,7 +108,7 @@ def game_score
   end
   scores_per_frame = to_scores_per_frame(all_scores)
   # 10フレーム目までのスコアを求める
-  puts frame_score(scores_per_frame, 10)
+  frame_score(scores_per_frame, 10)
 end
 
 def to_scores_per_frame(all_scores)
@@ -129,4 +129,8 @@ def to_scores_per_frame(all_scores)
   scores_per_frames
 end
 
-game_score if $PROGRAM_NAME == __FILE__
+def print_game_score
+  puts game_score
+end
+
+print_game_score if $PROGRAM_NAME == __FILE__
