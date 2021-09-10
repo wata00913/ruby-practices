@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-N = 10
+FRAME_NUM = 10
 STRIKE = 'X'
 
 class Frame
   attr_reader :scores
+  MAX_PINS = 10
 
   def initialize(scores)
     @scores = scores
@@ -15,7 +16,7 @@ class Frame
   end
 
   def spare?
-    @scores.sum == 10
+    @scores.sum == MAX_PINS
   end
 
   # フレーム内で倒したピンの数
@@ -23,11 +24,12 @@ class Frame
   def number_of_down_pins(ith_throw = 0)
     # ストライクの場合はith_throwの引数に限らず要素数が1
     sub_scores = @scores[0..(ith_throw - 1)]
-    sub_scores.inject(0) { |num, score| score == STRIKE ? num + 10 : num + score }
+    sub_scores.inject(0) { |num, score| score == STRIKE ? num + MAX_PINS : num + score }
   end
 end
 
 class Bowling
+  MAX_FRAME_SCORE = 10
   attr_reader :frames
 
   def initialize(scores_per_frame)
@@ -40,7 +42,7 @@ class Bowling
     (1..to).map.with_index(0).inject(0) do |score, (ith_frame, idx)|
       current_frame = get_frame(idx)
       next_frame = get_frame(idx + 1)
-      added_score = if ith_frame == 10
+      added_score = if ith_frame == FRAME_NUM
                       last_frame_score(current_frame)
                     elsif current_frame.strike?
                       strike_score(ith_frame + 1, idx + 1)
@@ -66,19 +68,19 @@ class Bowling
 
   # 1フレームのスペアのスコアを計算
   def spare_score(next_frame)
-    10 + next_frame.number_of_down_pins(1)
+    MAX_FRAME_SCORE + next_frame.number_of_down_pins(1)
   end
 
   # 1フレームのストライクのスコアを計算
   def strike_score(next_ith_frame, next_idx)
     next_frame = get_frame(next_idx)
-    if next_frame.strike? && next_ith_frame < 10
+    if next_frame.strike? && next_ith_frame < FRAME_NUM
       after_next_frame = get_frame(next_idx + 1)
-      10 + 10 + after_next_frame.number_of_down_pins(1)
-    elsif next_ith_frame == 10
-      10 + next_frame.number_of_down_pins(2)
+      MAX_FRAME_SCORE * 2 + after_next_frame.number_of_down_pins(1)
+    elsif next_ith_frame == FRAME_NUM
+      MAX_FRAME_SCORE + next_frame.number_of_down_pins(2)
     else
-      10 + next_frame.number_of_down_pins(2)
+      MAX_FRAME_SCORE + next_frame.number_of_down_pins(2)
     end
   end
 
@@ -114,15 +116,15 @@ end
 def to_scores_per_frame(all_scores)
   scores_per_frames = []
   nth_throw = 1
-  (1..N).each do |i|
+  (1..FRAME_NUM).each do |i|
     scores = []
     loop do
       score = all_scores[nth_throw - 1]
       scores << score
       nth_throw += 1
-      break if i < 10 && (score == STRIKE || scores.length == 2)
+      break if i < FRAME_NUM && (score == STRIKE || scores.length == 2)
 
-      break if i == 10 && nth_throw > all_scores.length
+      break if i == FRAME_NUM && nth_throw > all_scores.length
     end
     scores_per_frames << scores
   end
