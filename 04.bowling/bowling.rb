@@ -34,22 +34,21 @@ class Bowling
     @frames = to_frames(scores_per_frame)
   end
 
-  # 1投目から引数で指定したフレーム数までのスコアを計算
+  # 1投目から10投目までのスコアを計算
   def frame_score
-    # offset指定をしたいので、mapでEnumeratorに変換する
-    (1..FRAME_NUM).map.with_index(0).inject(0) do |score, (ith_frame, idx)|
-      current_frame = @frames[idx]
-      next_frame = @frames[idx + 1]
-      added_score = if ith_frame == FRAME_NUM
-                      last_frame_score(current_frame)
-                    elsif current_frame.strike?
-                      strike_score(ith_frame + 1, idx + 1)
-                    elsif current_frame.spare?
-                      spare_score(next_frame)
-                    else
-                      normal_score(current_frame)
-                    end
-      score + added_score
+    @frames.each_with_index.inject(0) do |score, (frame, idx)|
+      ith_frame = idx + 1
+      additional_score = if ith_frame == FRAME_NUM
+                           last_frame_score(frame)
+                         elsif frame.strike?
+                           strike_score(ith_frame + 1)
+                         elsif frame.spare?
+                           next_frame = @frames[idx + 1]
+                           spare_score(next_frame)
+                         else
+                           normal_score(frame)
+                         end
+      score + additional_score
     end
   end
 
@@ -70,7 +69,8 @@ class Bowling
   end
 
   # 1フレームのストライクのスコアを計算
-  def strike_score(next_ith_frame, next_idx)
+  def strike_score(next_ith_frame)
+    next_idx = next_ith_frame - 1
     next_frame = @frames[next_idx]
     if next_frame.strike? && next_ith_frame < FRAME_NUM
       after_next_frame = @frames[next_idx + 1]
