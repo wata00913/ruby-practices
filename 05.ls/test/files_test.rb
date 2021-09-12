@@ -19,16 +19,9 @@ class FilesTest < Minitest::Test
 
   def test_複数行を跨ぐ行列に分割
     fs = %w[fuga2.txt hoge.txt hoge fuga fuga.txt]
-    expected = [['fuga2.txt', 'hoge.txt', 'hoge'],
-                ['fuga', 'fuga.txt']]
-    assert_equal expected, to_matrix(fs, 3)
-  end
-
-  def test_複数行を跨ぐ行列に分割かつ行列を反転
-    fs = %w[fuga2.txt hoge.txt hoge fuga fuga.txt]
     expected = [['fuga2.txt', 'hoge', 'fuga.txt'],
                 ['hoge.txt', 'fuga']]
-    assert_equal expected, to_matrix(fs, 3, true)
+    assert_equal expected, to_matrix(fs, 3)
   end
 
   def test_要素の最大文字列長が8より小さい場合の列幅
