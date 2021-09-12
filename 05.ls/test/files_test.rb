@@ -30,4 +30,19 @@ class FilesTest < Minitest::Test
                 ['hoge.txt', 'fuga']]
     assert_equal expected, to_matrix(fs, 3, true)
   end
+
+  def test_要素の最大文字列長が8より小さい場合の列幅
+    arr = %w[hoge 1234567]
+    assert_equal 8, column_width(arr)
+  end
+
+  def test_要素の最大文字列長が8の倍数である場合の列幅
+    arr = %w[hogehoge 02]
+    assert_equal 16, column_width(arr)
+  end
+
+  def test_要素の最大文字列長が8の倍数を超える場合の列幅
+    arr = %w[hogehogeh 02]
+    assert_equal 16, column_width(arr)
+  end
 end

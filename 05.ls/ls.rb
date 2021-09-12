@@ -1,5 +1,4 @@
 MAX_COL = 3
-WIDTH = 16
 
 def files_without_dot(path)
   files = Dir.children(path)
@@ -22,14 +21,22 @@ def to_matrix(elements, max_col, vertical = false)
   matrix
 end
 
-def print_line(files)
-  line = files.inject('') { |line, file| line += file.ljust(WIDTH) }
+def column_width(str_list)
+  multiple = 8
+  max_str_length = str_list.map(&:length).max
+  ((max_str_length / multiple) + 1) * multiple
+end
+
+def print_line(files, width)
+  line = files.inject('') { |line, file| line += file.ljust(width) }
+  puts line
 end
 
 def print(files)
-  files_list = to_matrix(files.sort, MAX_COL)
-  files_list.each do |files|
-    print_line(files)
+  files_list = to_matrix(files.sort, MAX_COL, true)
+  col_width = column_width(files)
+  files_list.each do |fs|
+    print_line(fs, col_width)
   end
 end
 
