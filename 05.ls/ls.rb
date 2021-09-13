@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 MAX_COL = 3
 
 def files_without_dot(path)

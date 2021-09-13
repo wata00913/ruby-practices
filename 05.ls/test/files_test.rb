@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'minitest/autorun'
 require 'set'
 require_relative '../ls'
@@ -10,31 +12,30 @@ class FilesTest < Minitest::Test
     assert_equal expected, Set.new(fs)
   end
 
-  def test_行列に分割
+  def test_convert_array_to_1_by_n_matrix
     fs = %w[fuga.txt hoge.txt hoge]
-    expected = [%w[fuga.txt hoge hoge.txt]]
     expected = [%w[fuga.txt hoge.txt hoge]]
     assert_equal expected, to_matrix(fs, 3)
   end
 
-  def test_複数行を跨ぐ行列に分割
+  def test_convert_array_to_m_by_n_matrix
     fs = %w[fuga2.txt hoge.txt hoge fuga fuga.txt]
     expected = [['fuga2.txt', 'hoge', 'fuga.txt'],
                 ['hoge.txt', 'fuga']]
     assert_equal expected, to_matrix(fs, 3)
   end
 
-  def test_要素の最大文字列長が8より小さい場合の列幅
+  def test_column_width_when_max_string_length_of_elements_is_less_than_eight
     arr = %w[hoge 1234567]
     assert_equal 8, column_width(arr)
   end
 
-  def test_要素の最大文字列長が8の倍数である場合の列幅
+  def test_column_width_when_max_string_length_of_elements_is_multiple_of_eight
     arr = %w[hogehoge 02]
     assert_equal 16, column_width(arr)
   end
 
-  def test_要素の最大文字列長が8の倍数を超える場合の列幅
+  def test_column_width_when_max_string_length_of_elements_is_longer_than_eight
     arr = %w[hogehogeh 02]
     assert_equal 16, column_width(arr)
   end
