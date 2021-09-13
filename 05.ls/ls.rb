@@ -28,12 +28,12 @@ def column_width(str_list)
 end
 
 def print_line(files, width)
-  line = files.inject('') { |line, file| line += file.ljust(width) }
-  puts line
+  puts files.inject('') { |line, file| line + file.ljust(width) }
 end
 
 def print(files)
-  files_list = to_matrix(files.sort, MAX_COL)
+  col = $stdout.tty? ? MAX_COL : 1
+  files_list = to_matrix(files.sort, col)
   col_width = column_width(files)
   files_list.each do |fs|
     print_line(fs, col_width)
