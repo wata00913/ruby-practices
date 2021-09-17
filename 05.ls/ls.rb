@@ -4,41 +4,40 @@ MAX_COL = 3
 
 def file_name_list_without_dot(path)
   file_name_list = Dir.children(path)
-  file_name_list.reject { |f| f.match?('^\.') }
+  file_name_list.reject { |file_name| file_name.match?('^\.') }
 end
 
 def to_matrix(elements, col_size)
-  size = elements.size
-  max_row = if (size % col_size).zero?
-              size / col_size
-            else
-              (size / col_size) + 1
-            end
-  matrix = Array.new(max_row) { Array.new(col_size) { nil } }
+  row_size = if (elements.size % col_size).zero?
+               elements.size / col_size
+             else
+               (elements.size / col_size) + 1
+             end
+  matrix = Array.new(row_size) { Array.new(col_size) { nil } }
 
   elements.each_with_index do |element, idx|
-    row = matrix[idx % max_row]
-    row[idx / max_row] = element
+    row = matrix[idx % row_size]
+    row[idx / row_size] = element
   end
   matrix
 end
 
-def column_width(str_list)
+def adjust_width_to_max_char_length(str_list)
   multiple = 8
-  max_str_length = str_list.map(&:length).max
-  ((max_str_length / multiple) + 1) * multiple
+  max_char_length = str_list.map(&:length).max
+  ((max_char_length / multiple) + 1) * multiple
 end
 
-def print_line(files, width)
-  puts files.inject('') { |line, file| line + file.ljust(width) }
+def print_line(file_name_list, width)
+  puts file_name_list.inject('') { |line, file_nmae| line + file_nmae.ljust(width) }
 end
 
 def print(file_name_list)
   col = $stdout.tty? ? MAX_COL : 1
   file_name_mat = to_matrix(file_name_list.sort, col)
-  col_width = column_width(file_name_list)
+  width = adjust_width_to_max_char_length(file_name_list)
   file_name_mat.each do |row|
-    print_line(row.reject(&:nil?), col_width)
+    print_line(row.reject(&:nil?), width)
   end
 end
 
