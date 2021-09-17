@@ -12,17 +12,17 @@ class FilesTest < Minitest::Test
     assert_equal expected, Set.new(file_name_list)
   end
 
-  def test_convert_to_array_of_arrays
+  def test_convert_to_1_by_3_matrix
     file_name_list = %w[fuga.txt hoge.txt hoge]
     expected = [%w[fuga.txt hoge.txt hoge]]
-    assert_equal expected, to_array_of_arrays(file_name_list, 3)
+    assert_equal expected, to_matrix(file_name_list, 3)
   end
 
-  def test_convert_to_array_of_two_arrays
+  def test_convert_to_2_by_3_matrix
     file_name_list = %w[fuga2.txt hoge.txt hoge fuga fuga.txt]
     expected = [['fuga2.txt', 'hoge', 'fuga.txt'],
-                ['hoge.txt', 'fuga']]
-    assert_equal expected, to_array_of_arrays(file_name_list, 3)
+                ['hoge.txt', 'fuga', nil]]
+    assert_equal expected, to_matrix(file_name_list, 3)
   end
 
   def test_column_width_when_max_string_length_of_elements_is_less_than_eight

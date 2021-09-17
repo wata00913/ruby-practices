@@ -7,18 +7,18 @@ def file_name_list_without_dot(path)
   file_name_list.reject { |f| f.match?('^\.') }
 end
 
-def to_array_of_arrays(elements, max_inner_array_size)
+def to_matrix(elements, col_size)
   size = elements.size
-  max_row = if (size % max_inner_array_size).zero?
-              size / max_inner_array_size
+  max_row = if (size % col_size).zero?
+              size / col_size
             else
-              (size / max_inner_array_size) + 1
+              (size / col_size) + 1
             end
-  matrix = Array.new(max_row) { [] }
+  matrix = Array.new(max_row) { Array.new(col_size) { nil } }
 
   elements.each_with_index do |element, idx|
     row = matrix[idx % max_row]
-    row << element
+    row[idx / max_row] = element
   end
   matrix
 end
@@ -35,10 +35,10 @@ end
 
 def print(file_name_list)
   col = $stdout.tty? ? MAX_COL : 1
-  files_list = to_array_of_arrays(file_name_list.sort, col)
+  file_name_mat = to_matrix(file_name_list.sort, col)
   col_width = column_width(file_name_list)
-  files_list.each do |fs|
-    print_line(fs, col_width)
+  file_name_mat.each do |row|
+    print_line(row.reject(&:nil?), col_width)
   end
 end
 
