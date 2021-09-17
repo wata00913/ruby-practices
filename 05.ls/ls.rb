@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# ファイルを表示する最大列数は3で固定
 MAX_COL = 3
 
 def file_name_list_without_dot(path)
@@ -7,6 +8,9 @@ def file_name_list_without_dot(path)
   file_name_list.reject { |file_name| file_name.match?('^\.') }
 end
 
+# 配列から行列に変換
+# 列数は引数で指定し、行数は要素数 <= 列数×行数を満たす最大値
+# 要素を順番に1列目から格納し、余った行列の要素はnilを補完
 def to_matrix(elements, col_size)
   row_size = if (elements.size % col_size).zero?
                elements.size / col_size
@@ -22,6 +26,8 @@ def to_matrix(elements, col_size)
   matrix
 end
 
+# 文字配列の最大長に応じて横幅を求める
+# 最大長+1が8の倍数を満たすように横幅を計算
 def adjust_width_to_max_char_length(str_list)
   multiple = 8
   max_char_length = str_list.map(&:length).max
@@ -33,6 +39,7 @@ def print_line(file_name_list, width)
 end
 
 def print(file_name_list)
+  # 標準出力がターミナル以外の場合、表示列数は1
   col = $stdout.tty? ? MAX_COL : 1
   file_name_mat = to_matrix(file_name_list.sort, col)
   width = adjust_width_to_max_char_length(file_name_list)
