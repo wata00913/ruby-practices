@@ -2,9 +2,9 @@
 
 MAX_COL = 3
 
-def files_without_dot(path)
-  files = Dir.children(path)
-  files.reject { |f| f.match?('^\.') }
+def file_name_list_without_dot(path)
+  file_name_list = Dir.children(path)
+  file_name_list.reject { |f| f.match?('^\.') }
 end
 
 def to_array_of_arrays(elements, max_inner_array_size)
@@ -33,18 +33,18 @@ def print_line(files, width)
   puts files.inject('') { |line, file| line + file.ljust(width) }
 end
 
-def print(files)
+def print(file_name_list)
   col = $stdout.tty? ? MAX_COL : 1
-  files_list = to_array_of_arrays(files.sort, col)
-  col_width = column_width(files)
+  files_list = to_array_of_arrays(file_name_list.sort, col)
+  col_width = column_width(file_name_list)
   files_list.each do |fs|
     print_line(fs, col_width)
   end
 end
 
 def ls
-  fs = files_without_dot('.')
-  print(fs)
+  file_name_list = file_name_list_without_dot('.')
+  print(file_name_list)
 end
 
 ls if __FILE__ == $PROGRAM_NAME

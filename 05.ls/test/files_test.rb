@@ -7,22 +7,22 @@ require_relative '../ls'
 class FilesTest < Minitest::Test
   def test_ls_files_excluding_dot_files
     path = './test-data/'
-    fs = files_without_dot(path)
+    file_name_list = file_name_list_without_dot(path)
     expected = Set.new(%w[fuga.txt hoge hoge.txt])
-    assert_equal expected, Set.new(fs)
+    assert_equal expected, Set.new(file_name_list)
   end
 
   def test_convert_to_array_of_arrays
-    fs = %w[fuga.txt hoge.txt hoge]
+    file_name_list = %w[fuga.txt hoge.txt hoge]
     expected = [%w[fuga.txt hoge.txt hoge]]
-    assert_equal expected, to_array_of_arrays(fs, 3)
+    assert_equal expected, to_array_of_arrays(file_name_list, 3)
   end
 
   def test_convert_to_array_of_two_arrays
-    fs = %w[fuga2.txt hoge.txt hoge fuga fuga.txt]
+    file_name_list = %w[fuga2.txt hoge.txt hoge fuga fuga.txt]
     expected = [['fuga2.txt', 'hoge', 'fuga.txt'],
                 ['hoge.txt', 'fuga']]
-    assert_equal expected, to_array_of_arrays(fs, 3)
+    assert_equal expected, to_array_of_arrays(file_name_list, 3)
   end
 
   def test_column_width_when_max_string_length_of_elements_is_less_than_eight
