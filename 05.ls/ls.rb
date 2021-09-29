@@ -45,7 +45,7 @@ def display(file_name_list)
   file_name_mat = to_matrix(file_name_list, col)
   width = adjust_width_to_max_char_length(file_name_list)
   file_name_mat.each do |row|
-    display_line(row.reject(&:nil?), width)
+    display_line(row.compact, width)
   end
 end
 
