@@ -6,7 +6,7 @@ require_relative '../ls'
 
 class FilesTest < Minitest::Test
   def test_ls_files_excluding_dot_files
-    path = './test-data/'
+    path = './test-data/**'
     file_name_list = file_name_list_without_dot(path)
     expected = Set.new(%w[fuga.txt hoge hoge.txt])
     assert_equal expected, Set.new(file_name_list)

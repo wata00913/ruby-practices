@@ -3,9 +3,10 @@
 # ファイルを表示する最大列数は3で固定
 MAX_COL = 3
 
+# 引数のパスからファイル名を配列として返す
+# 配列の並び順はファイル名の昇順
 def file_name_list_without_dot(path)
-  file_name_list = Dir.children(path)
-  file_name_list.reject { |file_name| file_name.match?('^\.') }
+  Dir.glob(path).map { |name| File.basename(name) }
 end
 
 # 配列から行列に変換
@@ -41,7 +42,7 @@ end
 def display(file_name_list)
   # 標準出力がターミナル以外の場合、表示列数は1
   col = $stdout.tty? ? MAX_COL : 1
-  file_name_mat = to_matrix(file_name_list.sort, col)
+  file_name_mat = to_matrix(file_name_list, col)
   width = adjust_width_to_max_char_length(file_name_list)
   file_name_mat.each do |row|
     display_line(row.reject(&:nil?), width)
@@ -49,7 +50,7 @@ def display(file_name_list)
 end
 
 def ls
-  file_name_list = file_name_list_without_dot('.')
+  file_name_list = file_name_list_without_dot('*')
   display(file_name_list)
 end
 
