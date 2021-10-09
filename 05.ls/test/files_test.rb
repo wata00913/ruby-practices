@@ -12,6 +12,15 @@ class FilesTest < Minitest::Test
     assert_equal expected, Set.new(file_name_list)
   end
 
+  class LsFilesTest < Minitest::Test
+    def test_ls_files_including_dot_files
+      path = './test-data/**'
+      fn_list = file_name_list(path)
+      expected = Set.new(%w[. .. .hoge.rc fuga.txt hoge hoge.txt])
+      assert_equal expected, Set.new(fn_list)
+    end
+  end
+
   def test_convert_to_1_by_3_matrix
     elements = %w[fuga.txt hoge.txt hoge]
     expected = [%w[fuga.txt hoge.txt hoge]]

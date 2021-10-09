@@ -9,6 +9,10 @@ def file_name_list_without_dot(path)
   Dir.glob(path).map { |name| File.basename(name) }
 end
 
+def file_name_list(path)
+  Dir.glob(path, File::FNM_DOTMATCH).map { |name| File.basename(name) }
+end
+
 # 配列から行列に変換
 # 列数は引数で指定し、行数は要素数 <= 列数×行数を満たす最大値
 # 要素を順番に1列目から格納し、余った行列の要素はnilを補完
