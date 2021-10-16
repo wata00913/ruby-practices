@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'optparse'
+
 # ファイルを表示する最大列数は3で固定
 MAX_COL = 3
 
@@ -7,6 +9,10 @@ MAX_COL = 3
 # 配列の並び順はファイル名の昇順
 def file_name_list_without_dot(path)
   Dir.glob(path).map { |name| File.basename(name) }
+end
+
+def file_name_list(path)
+  Dir.glob(path, File::FNM_DOTMATCH).map { |name| File.basename(name) }
 end
 
 # 配列から行列に変換
@@ -50,8 +56,13 @@ def display(file_name_list)
 end
 
 def ls
-  file_name_list = file_name_list_without_dot('*')
-  display(file_name_list)
+  current_dir_patter = '*'
+  fn_list = if ARGV.include?('-a')
+              file_name_list(current_dir_patter)
+            else
+              file_name_list_without_dot(current_dir_patter)
+            end
+  display(fn_list)
 end
 
 ls if __FILE__ == $PROGRAM_NAME
