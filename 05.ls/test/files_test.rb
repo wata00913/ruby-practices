@@ -8,14 +8,14 @@ class FilesTest < Minitest::Test
   class LsFilesTest < Minitest::Test
     def test_ls_files_excluding_dot_files
       path = './test-data/**'
-      file_name_list = file_name_list_without_dot(path)
+      fn_list = file_name_list(path)
       expected = Set.new(%w[fuga.txt hoge hoge.txt])
-      assert_equal expected, Set.new(file_name_list)
+      assert_equal expected, Set.new(fn_list)
     end
 
     def test_ls_files_including_dot_files
       path = './test-data/**'
-      fn_list = file_name_list(path)
+      fn_list = file_name_list(path, dot: true)
       expected = Set.new(%w[. .. .hoge.rc fuga.txt hoge hoge.txt])
       assert_equal expected, Set.new(fn_list)
     end
