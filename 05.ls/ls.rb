@@ -50,11 +50,10 @@ def xx_reverse(file_name_list, is_reverse)
 end
 
 def display(file_name_list, is_reverse: false)
-  fn_list = xx_reverse(file_name_list, is_reverse)
   # 標準出力がターミナル以外の場合、表示列数は1
   col = $stdout.tty? ? MAX_COL : 1
-  file_name_mat = to_matrix(fn_list, col)
-  width = adjust_width_to_max_char_length(fn_list)
+  file_name_mat = to_matrix(file_name_list, col)
+  width = adjust_width_to_max_char_length(file_name_list)
   file_name_mat.each do |row|
     display_line(row.compact, width)
   end
@@ -68,6 +67,7 @@ def ls
               get_file_name_list(current_dir_patter)
             end
   is_reverse = ARGV.include?('-r')
+  fn_list = xx_reverse(fn_list, is_reverse)
   display(fn_list, is_reverse: is_reverse)
 end
 
