@@ -9,10 +9,12 @@ MAX_COL = 3
 # 配列の並び順はファイル名の昇順
 # @param [String] path ファイルリストの対象パス
 # @param [String] dot ファイルリストにドットファイルを含めるかどうかを指定
+# @param [Boolean] reverse ファイルリストの並び順。trueの場合は名前の降順でfalseの場合は名前の昇順
 # @return [Array] 引数のパスからファイル名を配列として返す
-def get_file_name_list(path, dot: false)
+def get_file_name_list(path, dot: false, reverse: false)
   flags = dot ? File::FNM_DOTMATCH : 0
-  Dir.glob(path, flags).map { |name| File.basename(name) }
+  file_name_list = Dir.glob(path, flags).map { |name| File.basename(name) }
+  xx_reverse(file_name_list, reverse)
 end
 
 # 配列から行列に変換

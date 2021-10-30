@@ -19,6 +19,20 @@ class FilesTest < Minitest::Test
       expected = Set.new(%w[. .. .hoge.rc fuga.txt hoge hoge.txt])
       assert_equal expected, Set.new(fn_list)
     end
+
+    def test_no_reverse
+      path = './test-data/**'
+      fn_list = get_file_name_list(path)
+      expected = %w[fuga.txt hoge hoge.txt]
+      assert_equal expected, fn_list
+    end
+
+    def test_reverse
+      path = './test-data/**'
+      fn_list = get_file_name_list(path, dot: false, reverse: true)
+      expected = %w[hoge.txt hoge fuga.txt]
+      assert_equal expected, fn_list
+    end
   end
 
   class ToMatrixTest < Minitest::Test
