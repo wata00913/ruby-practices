@@ -14,7 +14,7 @@ MAX_COL = 3
 def get_file_name_list(path, dot: false, reverse: false)
   flags = dot ? File::FNM_DOTMATCH : 0
   file_name_list = Dir.glob(path, flags).map { |name| File.basename(name) }
-  xx_reverse(file_name_list, reverse)
+  reverse ? file_name_list.reverse : file_name_list
 end
 
 # 配列から行列に変換
@@ -47,11 +47,7 @@ def display_line(file_name_list, width)
   puts file_name_list.inject('') { |line, file_nmae| line + file_nmae.ljust(width) }
 end
 
-def xx_reverse(file_name_list, is_reverse)
-  is_reverse ? file_name_list.reverse : file_name_list.clone
-end
-
-def display(file_name_list, is_reverse: false)
+def display(file_name_list)
   # 標準出力がターミナル以外の場合、表示列数は1
   col = $stdout.tty? ? MAX_COL : 1
   file_name_mat = to_matrix(file_name_list, col)
@@ -63,13 +59,12 @@ end
 
 def ls
   current_dir_patter = '*'
+  dot = ARGV.include?('-a')
   reverse = ARGV.include?('-r')
-  fn_list = if ARGV.include?('-a')
-              get_file_name_list(current_dir_patter, dot: true, reverse: reverse)
-            else
-              get_file_name_list(current_dir_patter, reverse: reverse)
-            end
-  display(fn_list, is_reverse: reverse)
+  file_name_list = get_file_name_list(current_dir_patter,
+                                      dot: dot,
+                                      reverse: reverse)
+  display(file_name_list)
 end
 
 ls if __FILE__ == $PROGRAM_NAME
