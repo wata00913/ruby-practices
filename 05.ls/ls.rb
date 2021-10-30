@@ -63,14 +63,13 @@ end
 
 def ls
   current_dir_patter = '*'
+  reverse = ARGV.include?('-r')
   fn_list = if ARGV.include?('-a')
-              get_file_name_list(current_dir_patter, dot: true)
+              get_file_name_list(current_dir_patter, dot: true, reverse: reverse)
             else
-              get_file_name_list(current_dir_patter)
+              get_file_name_list(current_dir_patter, reverse: reverse)
             end
-  is_reverse = ARGV.include?('-r')
-  fn_list = xx_reverse(fn_list, is_reverse)
-  display(fn_list, is_reverse: is_reverse)
+  display(fn_list, is_reverse: reverse)
 end
 
 ls if __FILE__ == $PROGRAM_NAME
