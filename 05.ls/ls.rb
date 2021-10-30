@@ -10,7 +10,7 @@ MAX_COL = 3
 # @param [String] path ファイルリストの対象パス
 # @param [String] dot ファイルリストにドットファイルを含めるかどうかを指定
 # @return [Array] 引数のパスからファイル名を配列として返す
-def file_name_list(path, dot: false)
+def get_file_name_list(path, dot: false)
   flags = dot ? File::FNM_DOTMATCH : 0
   Dir.glob(path, flags).map { |name| File.basename(name) }
 end
@@ -64,9 +64,9 @@ end
 def ls
   current_dir_patter = '*'
   fn_list = if ARGV.include?('-a')
-              file_name_list(current_dir_patter, dot: true)
+              get_file_name_list(current_dir_patter, dot: true)
             else
-              file_name_list(current_dir_patter)
+              get_file_name_list(current_dir_patter)
             end
   is_reverse = ARGV.include?('-r')
   display(fn_list, is_reverse: is_reverse)
