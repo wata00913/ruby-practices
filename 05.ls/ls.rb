@@ -45,13 +45,12 @@ def display_line(file_name_list, width)
   puts file_name_list.inject('') { |line, file_nmae| line + file_nmae.ljust(width) }
 end
 
-def display(file_name_list, is_reverse: false)
-  fn_list = if is_reverse
-              file_name_list.reverse
-            else
-              file_name_list.clone
-            end
+def xx_reverse(file_name_list, is_reverse)
+  is_reverse ? file_name_list.reverse : file_name_list.clone
+end
 
+def display(file_name_list, is_reverse: false)
+  fn_list = xx_reverse(file_name_list, is_reverse)
   # 標準出力がターミナル以外の場合、表示列数は1
   col = $stdout.tty? ? MAX_COL : 1
   file_name_mat = to_matrix(fn_list, col)
