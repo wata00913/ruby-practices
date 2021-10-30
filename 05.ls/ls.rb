@@ -63,10 +63,10 @@ def display(file_name_list)
 end
 
 def ls
-  current_dir_patter = '*'
+  current_dir_pattern = '*'
   dot = ARGV.include?('-a')
   reverse = ARGV.include?('-r')
-  file_name_list = get_file_name_list(current_dir_patter,
+  file_name_list = get_file_name_list(current_dir_pattern,
                                       dot: dot,
                                       reverse: reverse)
   display(file_name_list)
