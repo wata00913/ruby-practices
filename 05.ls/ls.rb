@@ -8,7 +8,7 @@ MAX_COL = 3
 # 引数のパスからファイル名を配列として返す
 # 配列の並び順はファイル名の昇順
 # @param [String] path ファイルリストの対象パス
-# @param [String] dot ファイルリストにドットファイルを含めるかどうかを指定
+# @param [Boolean] dot ファイルリストにドットファイルを含めるかどうかを指定
 # @param [Boolean] reverse ファイルリストの並び順。trueの場合は名前の降順でfalseの場合は名前の昇順
 # @return [Array] 引数のパスからファイル名を配列として返す
 def get_file_name_list(path, dot: false, reverse: false)
@@ -20,6 +20,9 @@ end
 # 配列から行列に変換
 # 列数は引数で指定し、行数は要素数 <= 列数×行数を満たす最大値
 # 要素を順番に1列目から格納し、余った行列の要素はnilを補完
+# @param [Array] elements 行列に変換する対象の配列
+# @param [Integer] col_size 行列の列数
+# @return [Array] 配列を二次元配列に変換したものを返す
 def to_matrix(elements, col_size)
   row_size = if (elements.size % col_size).zero?
                elements.size / col_size
@@ -37,6 +40,8 @@ end
 
 # 文字配列の最大長に応じて横幅を求める
 # 最大長+1が8の倍数を満たすように横幅を計算
+# @param [Array] str_list 文字列を要素とする配列
+# @return [Integer] 横幅を返す
 def adjust_width_to_max_char_length(str_list)
   multiple = 8
   max_char_length = str_list.map(&:length).max
