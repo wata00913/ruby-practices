@@ -5,6 +5,16 @@ require 'set'
 require_relative '../ls'
 
 class FilesTest < Minitest::Test
+  class FileStatTest < Minitest::Test
+    def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_754
+      assert_equal 'rwxr-xr--', to_s_three_permissions('754'.to_i(8))
+    end
+
+    def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_421
+      assert_equal 'r---w---x', to_s_three_permissions('421'.to_i(8))
+    end
+  end
+
   class LsFilesTest < Minitest::Test
     def setup
       @path = './test-data/**'

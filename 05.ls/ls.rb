@@ -5,6 +5,10 @@ require 'optparse'
 # ファイルを表示する最大列数は3で固定
 MAX_COL = 3
 
+READABLE_CHAR = 'r'
+WRITABLE_CHAR = 'w'
+EXECUTABLE_CHAR = 'x'
+
 # 引数のパスからファイル名を配列として返す
 # 配列の並び順はファイル名の昇順
 # @param [String] path ファイルリストの対象パス
@@ -15,6 +19,30 @@ def get_file_name_list(path, dot: false, reverse: false)
   flags = dot ? File::FNM_DOTMATCH : 0
   file_name_list = Dir.glob(path, flags).map { |name| File.basename(name) }
   reverse ? file_name_list.reverse : file_name_list
+end
+
+def to_s_three_permissions(three_permissions)
+  bit = three_permissions
+  str_permissions_list = []
+  3.times do
+    # 右から3bitのユーザpermissionを求める
+    permission = bit & 7
+    str_permissions_list.unshift(to_s_permission(permission))
+
+    # 1ユーザのpermissionを求めたら、右シフトさせて求めたユーザのビットは除去。
+    # 次のユーザを対象とする
+    bit = bit >> 3
+  end
+  str_permissions_list.join
+end
+
+def to_s_permission(permission)
+  # TODO 定数を使うこと
+  fields = []
+  fields << ((permission & 4).zero? ? '-' : 'r')
+  fields << ((permission & 2).zero? ? '-' : 'w')
+  fields << ((permission & 1).zero? ? '-' : 'x')
+  fields.join
 end
 
 # 配列から行列に変換
