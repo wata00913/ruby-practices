@@ -6,18 +6,32 @@ require_relative '../ls'
 
 class FilesTest < Minitest::Test
   class LsFilesTest < Minitest::Test
-    def test_ls_files_excluding_dot_files
-      path = './test-data/**'
-      file_name_list = file_name_list_without_dot(path)
-      expected = Set.new(%w[fuga.txt hoge hoge.txt])
-      assert_equal expected, Set.new(file_name_list)
+    def setup
+      @path = './test-data/**'
     end
 
-    def test_ls_files_including_dot_files
-      path = './test-data/**'
-      fn_list = file_name_list(path)
-      expected = Set.new(%w[. .. .hoge.rc fuga.txt hoge hoge.txt])
-      assert_equal expected, Set.new(fn_list)
+    def test_ls_files_excluding_dot_files_order_by_file_name
+      fn_list = get_file_name_list(@path)
+      expected = %w[fuga.txt hoge hoge.txt]
+      assert_equal expected, fn_list
+    end
+
+    def test_ls_files_including_dot_files_order_by_file_name
+      fn_list = get_file_name_list(@path, dot: true)
+      expected = %w[. .. .hoge.rc fuga.txt hoge hoge.txt]
+      assert_equal expected, fn_list
+    end
+
+    def test_ls_files_excluding_dot_files_order_by_file_name_desc
+      fn_list = get_file_name_list(@path, reverse: true)
+      expected = %w[hoge.txt hoge fuga.txt]
+      assert_equal expected, fn_list
+    end
+
+    def test_ls_files_including_dot_files_order_by_file_name_desc
+      fn_list = get_file_name_list(@path, dot: true, reverse: true)
+      expected = %w[hoge.txt hoge fuga.txt .hoge.rc .. .]
+      assert_equal expected, fn_list
     end
   end
 
