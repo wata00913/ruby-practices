@@ -21,6 +21,40 @@ def get_file_name_list(path, dot: false, reverse: false)
   reverse ? file_name_list.reverse : file_name_list
 end
 
+def build_file_info(path)
+  file_stat = File::Stat.new(path)
+  file_info = {}
+  file_info[:file_mode] = format_file_mode_to_ls_long_format(file_stat)
+  file_info[:number_of_links] = file_stat.nlink
+  file_info[:owner_name] = Etc.getpwuid(file_stat.uid).name
+  file_info[:group_name] = Etc.getgrgid(file_stat.gid).name
+  file_info[:bytes] = file_stat.size
+  file_info[:month] = file_stat.mtime.strftime('%m').to_i
+  file_info[:day] = file_stat.mtime.strftime('%d').to_i
+  file_info[:hour_min] = file_stat.mtime.strftime('%H:%M')
+  file_info[:filename] = File.basename(path)
+  file_info
+end
+
+def format_file_mode_to_ls_long_format(file_stat)
+  entry_type = format_entry_type_to_ls_long_format(file_stat)
+  three_permissions = to_s_three_permissions(file_stat.mode & 511)
+  "#{entry_type}#{three_permissions}"
+end
+
+def format_entry_type_to_ls_long_format(file_stat)
+  ftype_to_ls_long_format = {
+    'file' => '-',
+    'directory' => 'd',
+    'characterSpecial' => 'c',
+    'blockSpecial' => 'b',
+    'fifo' => 'p',
+    'link' => 'l',
+    'socket' => 's'
+  }
+  ftype_to_ls_long_format[file_stat.ftype]
+end
+
 def to_s_three_permissions(three_permissions)
   bit = three_permissions
   str_permissions_list = []
@@ -37,7 +71,7 @@ def to_s_three_permissions(three_permissions)
 end
 
 def to_s_permission(permission)
-  # TODO 定数を使うこと
+  # TODO: 定数を使うこと
   fields = []
   fields << ((permission & 4).zero? ? '-' : 'r')
   fields << ((permission & 2).zero? ? '-' : 'w')

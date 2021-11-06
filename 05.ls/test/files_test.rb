@@ -6,6 +6,40 @@ require_relative '../ls'
 
 class FilesTest < Minitest::Test
   class FileStatTest < Minitest::Test
+    def setup
+      @base_dir = './test-data'
+      @basename1 = 'fuga.txt'
+      @basename2 = '.'
+      @path1 = File.join(@base_dir, @basename1)
+      @path2 = File.join(@base_dir, @basename2)
+    end
+
+    def test_build_file_info1
+      file_info = { file_mode: '-rw-r--r--',
+                    number_of_links: 1,
+                    owner_name: 'sakamotoryuuji',
+                    group_name: 'staff',
+                    bytes: 0,
+                    month: 9,
+                    day: 23,
+                    hour_min: '20:20',
+                    filename: 'fuga.txt' }
+      assert_equal file_info, build_file_info(@path1)
+    end
+
+    def test_build_file_info2
+      file_info = { file_mode: 'drwxr-xr-x',
+                    number_of_links: 6,
+                    owner_name: 'sakamotoryuuji',
+                    group_name: 'staff',
+                    bytes: 192,
+                    month: 9,
+                    day: 23,
+                    hour_min: '20:20',
+                    filename: '.' }
+      assert_equal file_info, build_file_info(@path2)
+    end
+
     def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_754
       assert_equal 'rwxr-xr--', to_s_three_permissions('754'.to_i(8))
     end
