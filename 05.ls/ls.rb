@@ -15,16 +15,16 @@ EXECUTABLE_CHAR = 'x'
 # @param [Boolean] dot ファイルリストにドットファイルを含めるかどうかを指定
 # @param [Boolean] reverse ファイルリストの並び順。trueの場合は名前の降順でfalseの場合は名前の昇順
 # @return [Array] 引数のパスからファイル名を配列として返す
-def get_file_name_list(path, dot: false, reverse: false)
+def make_file_name_list(path, dot: false, reverse: false)
   flags = dot ? File::FNM_DOTMATCH : 0
   file_name_list = Dir.glob(path, flags).map { |name| File.basename(name) }
   reverse ? file_name_list.reverse : file_name_list
 end
 
-def build_file_info(path)
+def make_file_info(path)
   file_stat = File::Stat.new(path)
   file_info = {}
-  file_info[:file_mode] = format_file_mode_to_ls_long_format(file_stat)
+  file_info[:file_mode] = format_file_mode_to_ls_long(file_stat)
   file_info[:number_of_links] = file_stat.nlink
   file_info[:owner_name] = Etc.getpwuid(file_stat.uid).name
   file_info[:group_name] = Etc.getgrgid(file_stat.gid).name
@@ -36,13 +36,13 @@ def build_file_info(path)
   file_info
 end
 
-def format_file_mode_to_ls_long_format(file_stat)
-  entry_type = format_entry_type_to_ls_long_format(file_stat)
-  three_permissions = to_s_three_permissions(file_stat.mode & 511)
+def format_file_mode_to_ls_long(file_stat)
+  entry_type = format_entry_type_to_ls_long(file_stat)
+  three_permissions = format_three_permissions_bits_to_ls_long(file_stat.mode & 511)
   "#{entry_type}#{three_permissions}"
 end
 
-def format_entry_type_to_ls_long_format(file_stat)
+def format_entry_type_to_ls_long(file_stat)
   ftype_to_ls_long_format = {
     'file' => '-',
     'directory' => 'd',
@@ -55,27 +55,28 @@ def format_entry_type_to_ls_long_format(file_stat)
   ftype_to_ls_long_format[file_stat.ftype]
 end
 
-def to_s_three_permissions(three_permissions)
-  bit = three_permissions
-  str_permissions_list = []
+def format_three_permissions_bits_to_ls_long(three_permissions_bits)
+  formatted_permissions_list = []
   3.times do
     # 右から3bitのユーザpermissionを求める
-    permission = bit & 7
-    str_permissions_list.unshift(to_s_permission(permission))
+    permission_bits = three_permissions_bits & 7
+    formatted_permissions_list.unshift(
+      format_permission_bits_to_ls_long(permission_bits)
+    )
 
     # 1ユーザのpermissionを求めたら、右シフトさせて求めたユーザのビットは除去。
     # 次のユーザを対象とする
-    bit = bit >> 3
+    three_permissions_bits = three_permissions_bits >> 3
   end
-  str_permissions_list.join
+  formatted_permissions_list.join
 end
 
-def to_s_permission(permission)
+def format_permission_bits_to_ls_long(bits)
   # TODO: 定数を使うこと
   fields = []
-  fields << ((permission & 4).zero? ? '-' : 'r')
-  fields << ((permission & 2).zero? ? '-' : 'w')
-  fields << ((permission & 1).zero? ? '-' : 'x')
+  fields << ((bits & 4).zero? ? '-' : 'r')
+  fields << ((bits & 2).zero? ? '-' : 'w')
+  fields << ((bits & 1).zero? ? '-' : 'x')
   fields.join
 end
 
@@ -128,9 +129,9 @@ def ls
   current_dir_pattern = '*'
   dot = ARGV.include?('-a')
   reverse = ARGV.include?('-r')
-  file_name_list = get_file_name_list(current_dir_pattern,
-                                      dot: dot,
-                                      reverse: reverse)
+  file_name_list = make_file_name_list(current_dir_pattern,
+                                       dot: dot,
+                                       reverse: reverse)
   display(file_name_list)
 end
 

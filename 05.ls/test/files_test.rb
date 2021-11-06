@@ -14,7 +14,7 @@ class FilesTest < Minitest::Test
       @path2 = File.join(@base_dir, @basename2)
     end
 
-    def test_build_file_info1
+    def test_make_file_info1
       file_info = { file_mode: '-rw-r--r--',
                     number_of_links: 1,
                     owner_name: 'sakamotoryuuji',
@@ -24,10 +24,10 @@ class FilesTest < Minitest::Test
                     day: 23,
                     hour_min: '20:20',
                     filename: 'fuga.txt' }
-      assert_equal file_info, build_file_info(@path1)
+      assert_equal file_info, make_file_info(@path1)
     end
 
-    def test_build_file_info2
+    def test_make_file_info2
       file_info = { file_mode: 'drwxr-xr-x',
                     number_of_links: 6,
                     owner_name: 'sakamotoryuuji',
@@ -37,15 +37,15 @@ class FilesTest < Minitest::Test
                     day: 23,
                     hour_min: '20:20',
                     filename: '.' }
-      assert_equal file_info, build_file_info(@path2)
+      assert_equal file_info, make_file_info(@path2)
     end
 
     def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_754
-      assert_equal 'rwxr-xr--', to_s_three_permissions('754'.to_i(8))
+      assert_equal 'rwxr-xr--', format_three_permissions_bits_to_ls_long('754'.to_i(8))
     end
 
     def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_421
-      assert_equal 'r---w---x', to_s_three_permissions('421'.to_i(8))
+      assert_equal 'r---w---x', format_three_permissions_bits_to_ls_long('421'.to_i(8))
     end
   end
 
@@ -55,25 +55,25 @@ class FilesTest < Minitest::Test
     end
 
     def test_ls_files_excluding_dot_files_order_by_file_name
-      fn_list = get_file_name_list(@path)
+      fn_list = make_file_name_list(@path)
       expected = %w[fuga.txt hoge hoge.txt]
       assert_equal expected, fn_list
     end
 
     def test_ls_files_including_dot_files_order_by_file_name
-      fn_list = get_file_name_list(@path, dot: true)
+      fn_list = make_file_name_list(@path, dot: true)
       expected = %w[. .. .hoge.rc fuga.txt hoge hoge.txt]
       assert_equal expected, fn_list
     end
 
     def test_ls_files_excluding_dot_files_order_by_file_name_desc
-      fn_list = get_file_name_list(@path, reverse: true)
+      fn_list = make_file_name_list(@path, reverse: true)
       expected = %w[hoge.txt hoge fuga.txt]
       assert_equal expected, fn_list
     end
 
     def test_ls_files_including_dot_files_order_by_file_name_desc
-      fn_list = get_file_name_list(@path, dot: true, reverse: true)
+      fn_list = make_file_name_list(@path, dot: true, reverse: true)
       expected = %w[hoge.txt hoge fuga.txt .hoge.rc .. .]
       assert_equal expected, fn_list
     end
