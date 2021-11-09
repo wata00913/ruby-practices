@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optparse'
+require 'etc'
 
 # ファイルを表示する最大列数は3で固定
 MAX_COL = 3
@@ -125,6 +126,59 @@ def display(file_name_list)
   end
 end
 
+def find_field_to_max_char_length(file_info_list)
+  {
+    file_mode: find_max_char_length_by_field(file_info_list, :file_mode),
+    number_of_links: find_max_char_length_by_field(file_info_list, :number_of_links),
+    owner_name: find_max_char_length_by_field(file_info_list, :owner_name),
+    group_name: find_max_char_length_by_field(file_info_list, :group_name),
+    bytes: find_max_char_length_by_field(file_info_list, :bytes),
+    month: find_max_char_length_by_field(file_info_list, :month),
+    day: find_max_char_length_by_field(file_info_list, :day),
+    hour_min: find_max_char_length_by_field(file_info_list, :hour_min),
+    filename: find_max_char_length_by_field(file_info_list, :filename)
+  }
+end
+
+def find_max_char_length_by_field(file_info_list, field)
+  file_info_list.map { |el| el[field].to_s }.map(&:length).max
+end
+
+def display_file_info_line(file_info, field_to_max_char_length)
+  variable_field_left_padding = 2
+  fixed_field_left_padding = 1
+  blocks = [
+    file_info[:file_mode],
+    displayed_filed_block(file_info[:number_of_links].to_s, variable_field_left_padding, 0, 'rjust', field_to_max_char_length[:number_of_links]),
+    displayed_filed_block(file_info[:owner_name], fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:owner_name]),
+    displayed_filed_block(file_info[:group_name], variable_field_left_padding, 0, 'rjust', field_to_max_char_length[:group_name]),
+    displayed_filed_block(file_info[:bytes].to_s, variable_field_left_padding, 0, 'rjust', field_to_max_char_length[:bytes]),
+    displayed_filed_block(file_info[:month].to_s, fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:month]),
+    displayed_filed_block(file_info[:day].to_s, fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:day]),
+    displayed_filed_block(file_info[:hour_min], fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:hour_min]),
+    displayed_filed_block(file_info[:filename], fixed_field_left_padding, 0, 'ljust', field_to_max_char_length[:filename])
+  ]
+  puts blocks.join
+end
+
+def displayed_filed_block(charcters, left_padding, right_padding, position, width)
+  elements = []
+  case position
+  when 'rjust'
+    elements = [' ' * left_padding, charcters.rjust(width), ' ' * right_padding]
+  when 'ljust'
+    elements = [' ' * left_padding, charcters.ljust(width), ' ' * right_padding]
+  end
+  elements.join
+end
+
+def display_file_info_list(file_info_list)
+  field_to_max_char_length = find_field_to_max_char_length(file_info_list)
+  file_info_list.each do |file_info|
+    display_file_info_line(file_info, field_to_max_char_length)
+  end
+end
+
 def ls
   current_dir_pattern = '*'
   dot = ARGV.include?('-a')
@@ -132,7 +186,12 @@ def ls
   file_name_list = make_file_name_list(current_dir_pattern,
                                        dot: dot,
                                        reverse: reverse)
-  display(file_name_list)
+  if ARGV.include?('-l')
+    file_info_list = file_name_list.map { |file_name| make_file_info(file_name) }
+    display_file_info_list(file_info_list)
+  else
+    display(file_name_list)
+  end
 end
 
 ls if __FILE__ == $PROGRAM_NAME

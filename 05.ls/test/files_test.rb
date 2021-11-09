@@ -12,6 +12,26 @@ class FilesTest < Minitest::Test
       @basename2 = '.'
       @path1 = File.join(@base_dir, @basename1)
       @path2 = File.join(@base_dir, @basename2)
+
+      @file_info1 = { file_mode: '-rw-r--r--',
+                      number_of_links: 1,
+                      owner_name: 'sakamotoryuuji',
+                      group_name: 'staff',
+                      bytes: 0,
+                      month: 9,
+                      day: 23,
+                      hour_min: '20:20',
+                      filename: 'fuga.txt' }
+
+      @file_info2 = { file_mode: 'drwxr-xr-x',
+                      number_of_links: 6,
+                      owner_name: 'sakamotoryuuji',
+                      group_name: 'staff',
+                      bytes: 192,
+                      month: 9,
+                      day: 23,
+                      hour_min: '20:20',
+                      filename: '.' }
     end
 
     def test_make_file_info1
