@@ -22,6 +22,9 @@ def make_file_name_list(path, dot: false, reverse: false)
   reverse ? file_name_list.reverse : file_name_list
 end
 
+# ファイルパスからlsコマンドで使用するファイル情報をハッシュとして返す
+# @param [String] path ファイル情報の対象パス
+# @return [Hash] ファイル情報をハッシュとして返す
 def make_file_info(path)
   file_stat = File::Stat.new(path)
   file_info = {}
@@ -42,12 +45,18 @@ def calc_total_blocks(file_info_list)
   file_info_list.map { |file_info| file_info[:blocks] }.sum
 end
 
+# ファイルモードを-lオプションの形式にフォーマットする
+# @param [File::Stat] ファイル情報格納クラス
+# @return [String] -lオプションの形式にフォーマットしたファイルモードを返す
 def format_file_mode_to_ls_long(file_stat)
   entry_type = format_entry_type_to_ls_long(file_stat)
   three_permissions = format_three_permissions_bits_to_ls_long(file_stat.mode & 511)
   "#{entry_type}#{three_permissions}"
 end
 
+# ファイルのタイプを-lオプションの形式にフォーマットする
+# @param [File::Stat] ファイル情報格納クラス
+# @return [String] -lオプションの形式にフォーマットしたファイルのタイプを返す
 def format_entry_type_to_ls_long(file_stat)
   ftype_to_ls_long_format = {
     'file' => '-',
@@ -61,6 +70,9 @@ def format_entry_type_to_ls_long(file_stat)
   ftype_to_ls_long_format[file_stat.ftype]
 end
 
+# ファイルの3ユーザー(オーナー、グループ、その他ユーザー)のパーミッションを-lオプションの形式にフォーマットする
+# @param [Integer] 3ユーザーのパーミッションの整数値
+# @return [String] -lオプションの形式にフォーマットしたファイルの3ユーザーのパーミッションを返す
 def format_three_permissions_bits_to_ls_long(three_permissions_bits)
   formatted_permissions_list = []
   3.times do
@@ -77,6 +89,9 @@ def format_three_permissions_bits_to_ls_long(three_permissions_bits)
   formatted_permissions_list.join
 end
 
+# ファイルの1ユーザーのパーミッションを-lオプションの形式にフォーマットする
+# @param [Integer] 1ユーザーのパーミッションの整数値
+# @return [String] -lオプションの形式にフォーマットしたファイルの1ユーザーのパーミッションを返す
 def format_permission_bits_to_ls_long(bits)
   # TODO: 定数を使うこと
   fields = []
