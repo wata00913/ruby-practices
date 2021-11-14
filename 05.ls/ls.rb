@@ -162,15 +162,19 @@ def display_file_info_line(file_info, field_to_max_char_length)
   puts inline_elements.join
 end
 
-def displayed_field_inline_element(content, left_padding, right_padding, align, width)
-  element = []
-  case align
-  when 'rjust'
-    element = [' ' * left_padding, content.rjust(width), ' ' * right_padding]
-  when 'ljust'
-    element = [' ' * left_padding, content.ljust(width), ' ' * right_padding]
-  end
-  element.join
+def displayed_field_inline_element(text, left_padding, right_padding, align, width)
+  content = case align
+            when 'rjust'
+              text.rjust(width)
+            when 'ljust'
+              text.ljust(width)
+            end
+  element = {
+    left_padding: ' ' * left_padding,
+    right_padding: ' ' * right_padding,
+    content: content
+  }
+  "#{element[:left_padding]}#{element[:content]}#{element[:right_padding]}"
 end
 
 def display_file_info_lines(file_info_list)
