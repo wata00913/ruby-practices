@@ -182,7 +182,8 @@ def displayed_field_inline_element(text, left_padding, right_padding, align, wid
   "#{element[:left_padding]}#{element[:content]}#{element[:right_padding]}"
 end
 
-def display_file_info_lines(file_info_list)
+def display_file_info_lines(file_info_list, total_blocks)
+  puts "total #{total_blocks}"
   field_to_max_char_length = find_field_to_max_char_length(file_info_list)
   file_info_list.each do |file_info|
     display_file_info_line(file_info, field_to_max_char_length)
@@ -198,7 +199,8 @@ def ls
                                        reverse: reverse)
   if ARGV.include?('-l')
     file_info_list = file_name_list.map { |file_name| make_file_info(file_name) }
-    display_file_info_lines(file_info_list)
+    total_blocks = calc_total_blocks(file_info_list)
+    display_file_info_lines(file_info_list, total_blocks)
   else
     display_file_name_lines(file_name_list)
   end
