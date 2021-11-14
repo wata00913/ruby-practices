@@ -34,6 +34,7 @@ def make_file_info(path)
   file_info[:day] = file_stat.mtime.strftime('%d').to_i
   file_info[:hour_min] = file_stat.mtime.strftime('%H:%M')
   file_info[:filename] = File.basename(path)
+  file_info[:blocks] = file_stat.blocks
   file_info
 end
 

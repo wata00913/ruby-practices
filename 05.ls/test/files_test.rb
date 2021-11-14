@@ -43,7 +43,8 @@ class FilesTest < Minitest::Test
                     month: 9,
                     day: 23,
                     hour_min: '20:20',
-                    filename: 'fuga.txt' }
+                    filename: 'fuga.txt',
+                    blocks: 0 }
       assert_equal file_info, make_file_info(@path1)
     end
 
@@ -56,7 +57,8 @@ class FilesTest < Minitest::Test
                     month: 9,
                     day: 23,
                     hour_min: '20:20',
-                    filename: '.' }
+                    filename: '.',
+                    blocks: 0 }
       assert_equal file_info, make_file_info(@path2)
     end
 
