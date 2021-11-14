@@ -38,6 +38,10 @@ def make_file_info(path)
   file_info
 end
 
+def calc_total_blocks(file_info_list)
+  file_info_list.map { |file_info| file_info[:blocks] }.sum
+end
+
 def format_file_mode_to_ls_long(file_stat)
   entry_type = format_entry_type_to_ls_long(file_stat)
   three_permissions = format_three_permissions_bits_to_ls_long(file_stat.mode & 511)

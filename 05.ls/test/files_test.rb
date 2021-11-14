@@ -10,8 +10,10 @@ class FilesTest < Minitest::Test
       @base_dir = './test-data'
       @basename1 = 'fuga.txt'
       @basename2 = '.'
+      @basename3 = 'hoge.txt'
       @path1 = File.join(@base_dir, @basename1)
       @path2 = File.join(@base_dir, @basename2)
+      @path3 = File.join(@base_dir, @basename3)
 
       @file_info1 = { file_mode: '-rw-r--r--',
                       number_of_links: 1,
@@ -60,6 +62,11 @@ class FilesTest < Minitest::Test
                     filename: '.',
                     blocks: 0 }
       assert_equal file_info, make_file_info(@path2)
+    end
+
+    def test_calc_total_blocks
+      file_info_list = [make_file_info(@path1), make_file_info(@path3)]
+      assert_equal 16, calc_total_blocks(file_info_list)
     end
 
     def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_754
