@@ -112,67 +112,68 @@ def adjust_width_to_max_char_length(str_list)
   ((max_char_length / multiple) + 1) * multiple
 end
 
-def display_line(file_name_list, width)
+def display_file_name_line(file_name_list, width)
   puts file_name_list.inject('') { |line, file_nmae| line + file_nmae.ljust(width) }
 end
 
-def display(file_name_list)
+def display_file_name_lines(file_name_list)
   # 標準出力がターミナル以外の場合、表示列数は1
   col = $stdout.tty? ? MAX_COL : 1
   file_name_mat = to_matrix(file_name_list, col)
   width = adjust_width_to_max_char_length(file_name_list)
   file_name_mat.each do |row|
-    display_line(row.compact, width)
+    display_file_name_line(row.compact, width)
   end
 end
 
 def find_field_to_max_char_length(file_info_list)
   {
-    file_mode: find_max_char_length_by_field(file_info_list, :file_mode),
-    number_of_links: find_max_char_length_by_field(file_info_list, :number_of_links),
-    owner_name: find_max_char_length_by_field(file_info_list, :owner_name),
-    group_name: find_max_char_length_by_field(file_info_list, :group_name),
-    bytes: find_max_char_length_by_field(file_info_list, :bytes),
-    month: find_max_char_length_by_field(file_info_list, :month),
-    day: find_max_char_length_by_field(file_info_list, :day),
-    hour_min: find_max_char_length_by_field(file_info_list, :hour_min),
-    filename: find_max_char_length_by_field(file_info_list, :filename)
+    file_mode: find_max_char_length(file_info_list, :file_mode),
+    number_of_links: find_max_char_length(file_info_list, :number_of_links),
+    owner_name: find_max_char_length(file_info_list, :owner_name),
+    group_name: find_max_char_length(file_info_list, :group_name),
+    bytes: find_max_char_length(file_info_list, :bytes),
+    month: find_max_char_length(file_info_list, :month),
+    day: find_max_char_length(file_info_list, :day),
+    hour_min: find_max_char_length(file_info_list, :hour_min),
+    filename: find_max_char_length(file_info_list, :filename)
   }
 end
 
-def find_max_char_length_by_field(file_info_list, field)
+def find_max_char_length(file_info_list, field)
   file_info_list.map { |el| el[field].to_s }.map(&:length).max
 end
 
 def display_file_info_line(file_info, field_to_max_char_length)
-  variable_field_left_padding = 2
-  fixed_field_left_padding = 1
-  blocks = [
+  left_padding2 = 2
+  left_padding1 = 1
+  right_padding = 0
+  inline_elements = [
     file_info[:file_mode],
-    displayed_filed_block(file_info[:number_of_links].to_s, variable_field_left_padding, 0, 'rjust', field_to_max_char_length[:number_of_links]),
-    displayed_filed_block(file_info[:owner_name], fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:owner_name]),
-    displayed_filed_block(file_info[:group_name], variable_field_left_padding, 0, 'rjust', field_to_max_char_length[:group_name]),
-    displayed_filed_block(file_info[:bytes].to_s, variable_field_left_padding, 0, 'rjust', field_to_max_char_length[:bytes]),
-    displayed_filed_block(file_info[:month].to_s, fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:month]),
-    displayed_filed_block(file_info[:day].to_s, fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:day]),
-    displayed_filed_block(file_info[:hour_min], fixed_field_left_padding, 0, 'rjust', field_to_max_char_length[:hour_min]),
-    displayed_filed_block(file_info[:filename], fixed_field_left_padding, 0, 'ljust', field_to_max_char_length[:filename])
+    displayed_field_inline_element(file_info[:number_of_links].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:number_of_links]),
+    displayed_field_inline_element(file_info[:owner_name], left_padding1, right_padding, 'rjust', field_to_max_char_length[:owner_name]),
+    displayed_field_inline_element(file_info[:group_name], left_padding2, right_padding, 'rjust', field_to_max_char_length[:group_name]),
+    displayed_field_inline_element(file_info[:bytes].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:bytes]),
+    displayed_field_inline_element(file_info[:month].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:month]),
+    displayed_field_inline_element(file_info[:day].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:day]),
+    displayed_field_inline_element(file_info[:hour_min], left_padding1, right_padding, 'rjust', field_to_max_char_length[:hour_min]),
+    displayed_field_inline_element(file_info[:filename], left_padding1, right_padding, 'ljust', field_to_max_char_length[:filename])
   ]
-  puts blocks.join
+  puts inline_elements.join
 end
 
-def displayed_filed_block(charcters, left_padding, right_padding, position, width)
-  elements = []
-  case position
+def displayed_field_inline_element(content, left_padding, right_padding, align, width)
+  element = []
+  case align
   when 'rjust'
-    elements = [' ' * left_padding, charcters.rjust(width), ' ' * right_padding]
+    element = [' ' * left_padding, content.rjust(width), ' ' * right_padding]
   when 'ljust'
-    elements = [' ' * left_padding, charcters.ljust(width), ' ' * right_padding]
+    element = [' ' * left_padding, content.ljust(width), ' ' * right_padding]
   end
-  elements.join
+  element.join
 end
 
-def display_file_info_list(file_info_list)
+def display_file_info_lines(file_info_list)
   field_to_max_char_length = find_field_to_max_char_length(file_info_list)
   file_info_list.each do |file_info|
     display_file_info_line(file_info, field_to_max_char_length)
@@ -188,9 +189,9 @@ def ls
                                        reverse: reverse)
   if ARGV.include?('-l')
     file_info_list = file_name_list.map { |file_name| make_file_info(file_name) }
-    display_file_info_list(file_info_list)
+    display_file_info_lines(file_info_list)
   else
-    display(file_name_list)
+    display_file_name_lines(file_name_list)
   end
 end
 
