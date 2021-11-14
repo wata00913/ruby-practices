@@ -39,12 +39,12 @@ class FilesTest < Minitest::Test
                     number_of_links: 1,
                     owner_name: 'sakamotoryuuji',
                     group_name: 'staff',
-                    bytes: 0,
-                    month: 9,
-                    day: 23,
-                    hour_min: '20:20',
+                    bytes: 637,
+                    month: 11,
+                    day: 14,
+                    hour_min: '20:51',
                     filename: 'fuga.txt',
-                    blocks: 0 }
+                    blocks: 8 }
       assert_equal file_info, make_file_info(@path1)
     end
 
@@ -54,9 +54,9 @@ class FilesTest < Minitest::Test
                     owner_name: 'sakamotoryuuji',
                     group_name: 'staff',
                     bytes: 192,
-                    month: 9,
-                    day: 23,
-                    hour_min: '20:20',
+                    month: 11,
+                    day: 14,
+                    hour_min: '20:52',
                     filename: '.',
                     blocks: 0 }
       assert_equal file_info, make_file_info(@path2)
