@@ -11,29 +11,9 @@ class FilesTest < Minitest::Test
       @basename1 = 'fuga.txt'
       @basename2 = '.'
       @basename3 = 'hoge.txt'
-      @path1 = File.join(@base_dir, @basename1)
-      @path2 = File.join(@base_dir, @basename2)
-      @path3 = File.join(@base_dir, @basename3)
-
-      @file_info1 = { file_mode: '-rw-r--r--',
-                      number_of_links: 1,
-                      owner_name: 'sakamotoryuuji',
-                      group_name: 'staff',
-                      bytes: 0,
-                      month: 9,
-                      day: 23,
-                      hour_min: '20:20',
-                      filename: 'fuga.txt' }
-
-      @file_info2 = { file_mode: 'drwxr-xr-x',
-                      number_of_links: 6,
-                      owner_name: 'sakamotoryuuji',
-                      group_name: 'staff',
-                      bytes: 192,
-                      month: 9,
-                      day: 23,
-                      hour_min: '20:20',
-                      filename: '.' }
+      @fuga_path = File.join(@base_dir, @basename1)
+      @dot_path = File.join(@base_dir, @basename2)
+      @hoge_path = File.join(@base_dir, @basename3)
     end
 
     def test_make_file_info1
@@ -47,7 +27,7 @@ class FilesTest < Minitest::Test
                     hour_min: '20:51',
                     filename: 'fuga.txt',
                     blocks: 8 }
-      assert_equal file_info, make_file_info(@path1)
+      assert_equal file_info, make_file_info(@fuga_path)
     end
 
     def test_make_file_info2
@@ -61,11 +41,11 @@ class FilesTest < Minitest::Test
                     hour_min: '20:52',
                     filename: '.',
                     blocks: 0 }
-      assert_equal file_info, make_file_info(@path2)
+      assert_equal file_info, make_file_info(@dot_path)
     end
 
     def test_calc_total_blocks
-      file_info_list = [make_file_info(@path1), make_file_info(@path3)]
+      file_info_list = [make_file_info(@fuga_path), make_file_info(@hoge_path)]
       assert_equal 16, calc_total_blocks(file_info_list)
     end
 
