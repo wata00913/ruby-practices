@@ -49,11 +49,11 @@ class FilesTest < Minitest::Test
       assert_equal 16, calc_total_blocks(file_info_list)
     end
 
-    def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_754
+    def test_return_long_format_three_permissions_when_octal_value_is754
       assert_equal 'rwxr-xr--', format_three_permissions_bits_to_ls_long('754'.to_i(8))
     end
 
-    def test_return_rw‐r‐‐r‐‐_string_when_octal_value_is_421
+    def test_return_long_format_three_permissions_when_octal_value_is421
       assert_equal 'r---w---x', format_three_permissions_bits_to_ls_long('421'.to_i(8))
     end
   end
