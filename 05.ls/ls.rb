@@ -6,9 +6,13 @@ require 'etc'
 # ファイルを表示する最大列数は3で固定
 MAX_COL = 3
 
-READABLE_CHAR = 'r'
-WRITABLE_CHAR = 'w'
-EXECUTABLE_CHAR = 'x'
+PERMISSION = {
+  fully_effective: { bit: 511 }.freeze,
+  no_effect: { str: '-' }.freeze,
+  readable: { bit: 4, str: 'r' }.freeze,
+  writable: { bit: 2, str: 'w' }.freeze,
+  executable: { bit: 1, str: 'x' }.freeze
+}.freeze
 
 # 引数のパスからファイル名を配列として返す
 # 配列の並び順はファイル名の昇順
@@ -50,7 +54,10 @@ end
 # @return [String] -lオプションの形式にフォーマットしたファイルモードを返す
 def format_file_mode_to_ls_long(file_stat)
   entry_type = format_entry_type_to_ls_long(file_stat)
-  three_permissions = format_three_permissions_bits_to_ls_long(file_stat.mode & 511)
+  # ファイルモードはファイルタイプと特殊な権限にを左3桁の値を使用。
+  # 全ユーザーのパーミッション値のみを取り出すために、ファイルモードと全ユーザーの有効パーミッションで論理積をとる
+  three_permissions_bits = file_stat.mode & PERMISSION[:fully_effective][:bit]
+  three_permissions = format_three_permissions_bits_to_ls_long(file_stat.mode & three_permissions_bits)
   "#{entry_type}#{three_permissions}"
 end
 
@@ -95,9 +102,9 @@ end
 def format_permission_bits_to_ls_long(bits)
   # TODO: 定数を使うこと
   fields = []
-  fields << ((bits & 4).zero? ? '-' : 'r')
-  fields << ((bits & 2).zero? ? '-' : 'w')
-  fields << ((bits & 1).zero? ? '-' : 'x')
+  fields << ((bits & PERMISSION[:readable][:bit]).zero? ? PERMISSION[:no_effect][:str] : PERMISSION[:readable][:str])
+  fields << ((bits & PERMISSION[:writable][:bit]).zero? ? PERMISSION[:no_effect][:str] : PERMISSION[:writable][:str])
+  fields << ((bits & PERMISSION[:executable][:bit]).zero? ? PERMISSION[:no_effect][:str] : PERMISSION[:executable][:str])
   fields.join
 end
 
