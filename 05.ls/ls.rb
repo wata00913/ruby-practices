@@ -100,7 +100,6 @@ end
 # @param [Integer] 1ユーザーのパーミッションの整数値
 # @return [String] -lオプションの形式にフォーマットしたファイルの1ユーザーのパーミッションを返す
 def format_permission_bits_to_ls_long(bits)
-  # TODO: 定数を使うこと
   fields = []
   fields << ((bits & PERMISSION[:readable][:bit]).zero? ? PERMISSION[:no_effect][:str] : PERMISSION[:readable][:str])
   fields << ((bits & PERMISSION[:writable][:bit]).zero? ? PERMISSION[:no_effect][:str] : PERMISSION[:writable][:str])
@@ -168,7 +167,7 @@ def find_field_to_max_char_length(file_info_list)
 end
 
 def find_max_char_length(file_info_list, field)
-  file_info_list.map { |el| el[field].to_s }.map(&:length).max
+  file_info_list.map { |el| el[field].to_s.length }.max
 end
 
 def display_file_info_line(file_info, field_to_max_char_length)
