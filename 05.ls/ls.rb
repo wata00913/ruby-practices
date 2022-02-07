@@ -212,13 +212,20 @@ def display_file_info_lines(file_info_list, total_blocks)
 end
 
 def ls
+  ls_opts = { dot: false, reverse: false, long: false }
+  OptionParser.new do |opts|
+    opts.on('-a') { |_v| ls_opts[:dot] = true }
+    opts.on('-l') { |_v| ls_opts[:long] = true }
+    opts.on('-r') { |_v| ls_opts[:reverse] = true }
+  end.parse!(ARGV)
+
   current_dir_pattern = '*'
-  dot = ARGV.include?('-a')
-  reverse = ARGV.include?('-r')
+  dot = ls_opts[:dot]
+  reverse = ls_opts[:reverse]
   file_name_list = make_file_name_list(current_dir_pattern,
                                        dot: dot,
                                        reverse: reverse)
-  if ARGV.include?('-l')
+  if ls_opts[:long]
     file_info_list = file_name_list.map { |file_name| make_file_info(file_name) }
     total_blocks = calc_total_blocks(file_info_list)
     display_file_info_lines(file_info_list, total_blocks)
