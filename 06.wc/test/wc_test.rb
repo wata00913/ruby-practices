@@ -58,4 +58,29 @@ class WCTest < Minitest::Test
       assert_equal expected, create_counter(io)
     end
   end
+
+  class ViewTest < Minitest::Test
+    def test_wc_line
+      expected = '       3       4      26 input.txt'
+      counter = { lines: 3, words: 4, chars: 26 }
+      file_name = 'input.txt'
+      assert_equal expected, display_wc_line(counter, file_name)
+    end
+
+    def test_wc_line2
+      expected = '       3 input.txt'
+      counter = { lines: 3, words: 4, chars: 26 }
+      file_name = 'input.txt'
+      assert_equal expected, display_wc_line(counter, file_name,
+                                             visible_words: false,
+                                             visible_chars: false)
+    end
+
+    def test_wc_line3
+      expected = '       3       4      26'
+      counter = { lines: 3, words: 4, chars: 26 }
+      file_name = ''
+      assert_equal expected, display_wc_line(counter, file_name)
+    end
+  end
 end
