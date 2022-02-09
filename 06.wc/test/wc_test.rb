@@ -1,3 +1,4 @@
+require 'stringio'
 require 'minitest/autorun'
 require_relative '../wc'
 
@@ -40,6 +41,21 @@ class WCTest < Minitest::Test
     def test_文字列をバイト長でカウント2
       str = "hoge\n"
       assert_equal 5, count_chars(str)
+    end
+  end
+
+  def test_create_counter_by_file
+    input_path = './input.txt'
+    expected = { lines: 3, words: 4, chars: 26 }
+    File.open(input_path) do |f|
+      assert_equal expected, create_counter(f)
+    end
+  end
+
+  def test_create_counter_by_stdin
+    expected = { lines: 1, words: 1, chars: 9 }
+    StringIO.open("😄😄\n") do |io|
+      assert_equal expected, create_counter(io)
     end
   end
 end
