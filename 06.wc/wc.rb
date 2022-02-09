@@ -23,6 +23,18 @@ def create_counter(io)
   { lines: total_lines, words: total_words, chars: total_chars }
 end
 
+def total_count(counters)
+  total_lines = 0
+  total_words = 0
+  total_chars = 0
+  counters.each do |counter|
+    total_lines += counter[:lines]
+    total_words += counter[:words]
+    total_chars += counter[:chars]
+  end
+  { lines: total_lines, words: total_words, chars: total_chars }
+end
+
 def display_wc_line(counter, file_name = '',
                     visible_lines: true,
                     visible_words: true,

@@ -59,6 +59,15 @@ class WCTest < Minitest::Test
     end
   end
 
+  def test_total_counter
+    expected = { lines: 89, words: 227, chars: 2496 }
+    counters = [
+      { lines: 3, words: 4, chars: 26 },
+      { lines: 86, words: 223, chars: 2470 }
+    ]
+    assert_equal expected, total_count(counters)
+  end
+
   class ViewTest < Minitest::Test
     def test_wc_line
       expected = '       3       4      26 input.txt'
