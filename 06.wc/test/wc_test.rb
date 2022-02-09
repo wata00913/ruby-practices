@@ -30,4 +30,16 @@ class WCTest < Minitest::Test
       assert_equal 0, count_lines(str)
     end
   end
+
+  class CharctersCounterTest < Minitest::Test
+    def test_文字列をバイト長でカウント
+      str = "あいう😄\n"
+      assert_equal 14, count_chars(str)
+    end
+
+    def test_文字列をバイト長でカウント2
+      str = "hoge\n"
+      assert_equal 5, count_chars(str)
+    end
+  end
 end
