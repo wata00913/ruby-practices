@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
+require 'minitest/stub_any_instance'
+require 'time'
 require 'set'
 require_relative '../ls'
 
@@ -23,11 +25,13 @@ class FilesTest < Minitest::Test
                     group_name: 'staff',
                     bytes: 637,
                     month: 11,
-                    day: 14,
-                    hour_min: '20:51',
+                    day: 1,
+                    hour_min: '11:50',
                     filename: 'fuga.txt',
                     blocks: 8 }
-      assert_equal file_info, make_file_info(@fuga_path)
+      File::Stat.stub_any_instance(:mtime, Time.new(2021, 11, 1, 11, 50)) do
+        assert_equal file_info, make_file_info(@fuga_path)
+      end
     end
 
     def test_make_file_info2
@@ -37,11 +41,13 @@ class FilesTest < Minitest::Test
                     group_name: 'staff',
                     bytes: 192,
                     month: 11,
-                    day: 14,
-                    hour_min: '20:52',
+                    day: 29,
+                    hour_min: '23:59',
                     filename: '.',
                     blocks: 0 }
-      assert_equal file_info, make_file_info(@dot_path)
+      File::Stat.stub_any_instance(:mtime, Time.new(2021, 11, 29, 23, 59)) do
+        assert_equal file_info, make_file_info(@dot_path)
+      end
     end
 
     def test_calc_total_blocks
