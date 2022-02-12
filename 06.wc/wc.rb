@@ -4,12 +4,12 @@ require 'optparse'
 
 # 文字列から単語数をカウントする
 # 単語の区切り文字は空白文字と改行文字
-# @param [String] line 文字列
+# @param [String] str 文字列
 # @return [Integer] 単語数
-def count_words(line)
+def count_words(str)
   sep = /[\n\s]+/
   # 分割した要素に含まれうる空文字列は、除外してカウントする
-  line.split(sep).count { |candidate| !candidate.empty? }
+  str.split(sep).count { |candidate| !candidate.empty? }
 end
 
 # 文字列から行数をカウントする
@@ -58,13 +58,14 @@ def total_count(counters)
   { lines: total_lines, words: total_words, chars: total_chars }
 end
 
-def display_wc_line(counter, file_name = '',
-                    visible_lines: true,
-                    visible_words: true,
-                    visible_chars: true)
+def displayed_wc_line(counter, file_name = '',
+                      visible_lines: true,
+                      visible_words: true,
+                      visible_chars: true)
   l_padding = 1
   width = 7
   elements = []
+  # joinで空白は作成しない
   # 左端列も空白が必要なので、rjustで列ごとの空白を作成
   elements.push(counter[:lines].to_s.rjust(l_padding + width)) if visible_lines
   elements.push(counter[:words].to_s.rjust(l_padding + width)) if visible_words
@@ -92,7 +93,7 @@ def wc
   file_name_list = ARGV.map { |pattern| collect_file(pattern) }.flatten
 
   # ファイル指定がない場合は、標準入力のカウントを行う
-  files_counter = if file_name_list.empty?
+  file_counters = if file_name_list.empty?
                     [{ name: '', counter: create_counter($stdin) }]
                   else
                     file_name_list.map do |file_name|
@@ -102,17 +103,17 @@ def wc
                     end
                   end
 
-  if files_counter.size > 1
-    counters = files_counter.map { |fc| fc[:counter] }
-    files_counter.push({ name: 'total', counter: total_count(counters) })
+  if file_counters.size > 1
+    counters = file_counters.map { |fc| fc[:counter] }
+    file_counters.push({ name: 'total', counter: total_count(counters) })
   end
 
-  files_counter.each do |fc|
-    puts display_wc_line(fc[:counter],
-                         fc[:name],
-                         visible_lines: wc_opts[:lines],
-                         visible_words: wc_opts[:words],
-                         visible_chars: wc_opts[:chars])
+  file_counters.each do |fc|
+    puts displayed_wc_line(fc[:counter],
+                           fc[:name],
+                           visible_lines: wc_opts[:lines],
+                           visible_words: wc_opts[:words],
+                           visible_chars: wc_opts[:chars])
   end
 end
 
