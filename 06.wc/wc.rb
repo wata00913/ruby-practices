@@ -2,20 +2,35 @@
 
 require 'optparse'
 
+# 文字列から単語数をカウントする
+# 単語の区切り文字は空白文字と改行文字
+# @param [String] line 文字列
+# @return [Integer] 単語数
 def count_words(line)
   sep = /[\n\s]+/
-  # 分割した要素に含まれる可能性がある空文字列は、除外してカウントする
+  # 分割した要素に含まれうる空文字列は、除外してカウントする
   line.split(sep).count { |candidate| !candidate.empty? }
 end
 
+# 文字列から行数をカウントする
+# @param [String] str 文字列
+# @return [Integer] 行数
 def count_lines(str)
   str.count("\n")
 end
 
+# 文字列の文字数をカウントする
+# ここでの文字数は文字列のバイト長とする
+# @param [String] str 文字列
+# @return [Integer] 文字数
 def count_chars(str)
   str.bytesize
 end
 
+# ファイルを読み込んで、ファイルのCounterを作成
+# Counterは行数、単語数、文字数で構成されるHash
+# @param [IO] io IO、またはIOのeach_lineメソッドを継承したインスタンス変数(Fileクラスなど)
+# @return [Hash] ファイルの行数、単語数、文字数を構成するHash
 def create_counter(io)
   total_lines = 0
   total_words = 0
@@ -28,6 +43,9 @@ def create_counter(io)
   { lines: total_lines, words: total_words, chars: total_chars }
 end
 
+# 複数のCounterの行数、単語数、文字数ごとに合計したCounterを返す
+# @param [Array] str 文字列
+# @return [Hash] ファイルの行数、単語数、文字数を構成するHash
 def total_count(counters)
   total_lines = 0
   total_words = 0
