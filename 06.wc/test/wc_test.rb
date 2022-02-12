@@ -18,6 +18,11 @@ class WCTest < Minitest::Test
       line = "hoge  fuga\n\nhoge"
       assert_equal 3, count_words(line)
     end
+
+    def test_先頭が空白文字で始まる場合に文字数をカウント
+      line = " hoge  fuga\n hoge"
+      assert_equal 3, count_words(line)
+    end
   end
 
   class LinesCounterTest < Minitest::Test

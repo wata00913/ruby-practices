@@ -4,7 +4,8 @@ require 'optparse'
 
 def count_words(line)
   sep = /[\n\s]+/
-  line.split(sep).size
+  # 分割した要素に含まれる可能性がある空文字列は、除外してカウントする
+  line.split(sep).count { |candidate| !candidate.empty? }
 end
 
 def count_lines(str)
