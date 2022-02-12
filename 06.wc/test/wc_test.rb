@@ -5,6 +5,7 @@ require_relative '../wc'
 class WCTest < Minitest::Test
   class WordsCounterTest < Minitest::Test
     def test_制御文字で区切られた文字数をカウント
+      binding.irb
       line = "hoge fuga\nhoge\tあ"
       assert_equal 4, count_words(line)
     end

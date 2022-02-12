@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+require 'optparse'
+
 def count_words(line)
   sep = /[\n\s]+/
   line.split(sep).size
@@ -50,3 +54,47 @@ def display_wc_line(counter, file_name = '',
 
   elements.join
 end
+
+def collect_file(pattern)
+  Dir.glob(pattern).filter { |name| File.file?(name) }
+end
+
+def wc
+  wc_opts = { lines: false, words: false, chars: false }
+  OptionParser.new do |opts|
+    opts.on('-l') { |_v| wc_opts[:lines] = true }
+    opts.on('-w') { |_v| wc_opts[:words] = true }
+    opts.on('-c') { |_v| wc_opts[:chars] = true }
+  end.parse!(ARGV)
+
+  # オプション指定がない場合はデフォルトオプションを使用。
+  wc_opts.transform_values! { |_v| true } unless wc_opts.values.all?
+
+  file_name_list = ARGV.map { |pattern| collect_file(pattern) }.flatten
+
+  # ファイル指定がない場合は、標準入力のカウントを行う
+  files_counter = if file_name_list.empty?
+                    [{ name: '', counter: create_counter($stdin) }]
+                  else
+                    file_name_list.map do |file_name|
+                      File.open(file_name) do |f|
+                        { name: file_name, counter: create_counter(f) }
+                      end
+                    end
+                  end
+
+  if files_counter.size > 1
+    counters = files_counter.map { |fc| fc[:counter] }
+    files_counter.push({ name: 'total', counter: total_count(counters) })
+  end
+
+  files_counter.each do |fc|
+    puts display_wc_line(fc[:counter],
+                         fc[:name],
+                         visible_lines: wc_opts[:lines],
+                         visible_words: wc_opts[:words],
+                         visible_chars: wc_opts[:chars])
+  end
+end
+
+wc
