@@ -97,4 +97,4 @@ def wc
   end
 end
 
-wc
+wc if __FILE__ == $PROGRAM_NAME
