@@ -1,55 +1,57 @@
+# frozen_string_literal: true
+
 require 'stringio'
 require 'minitest/autorun'
 require_relative '../wc'
 
 class WCTest < Minitest::Test
   class WordsCounterTest < Minitest::Test
-    def test_単語の間に区切り文字がある場合に区切られた単語数をカウントする
+    def test_count_words_separated_by_whitespace
       line = "hoge fuga\nhoge\tあ"
       assert_equal 4, count_words(line)
     end
 
-    def test_先頭に区切り文字があっても単語の間に区切り文字がある場合に区切られた単語数をカウントする
+    def test_count_words_separated_by_whitespace2
       line = " hoge fuga\nhoge\tあ"
       assert_equal 4, count_words(line)
     end
 
-    def test_区切り文字のみある場合に単語数をカウントしない
+    def test_not_count_words_when_only_separators
       line = "\n\t    "
       assert_equal 0, count_words(line)
     end
 
-    def test_単語の間に連続した区切り文字がある場合に連續した区切り文字は1つの区切り文字として扱い、区切られた文字数をカウントする
+    def test_count_words_separated_by_whitespace_even_if_consecutive_whitespace
       line = "hoge fuga\n\nhoge\tあ"
       assert_equal 4, count_words(line)
     end
   end
 
   class LinesCounterTest < Minitest::Test
-    def test_文字列で改行を区切り文字としてカウント
+    def test_count_newline
       str = "hoge\nf\n"
       assert_equal 2, count_lines(str)
     end
 
-    def test_空文字列は0行でカウント
+    def test_not_count_empty
       str = ''
       assert_equal 0, count_lines(str)
     end
   end
 
   class CharctersCounterTest < Minitest::Test
-    def test_文字列をバイト長でカウント
+    def test_count_str_by_byte_length
       str = "あいう😄\n"
       assert_equal 14, count_chars(str)
     end
 
-    def test_文字列をバイト長でカウント2
+    def test_count_str_by_byte_length2
       str = "hoge\n"
       assert_equal 5, count_chars(str)
     end
   end
 
-  def test_create_counter_by_file
+  def test_create_counter_from_file
     input_path = './input.txt'
     expected = { lines: 3, words: 4, chars: 26 }
     File.open(input_path) do |f|
@@ -57,7 +59,7 @@ class WCTest < Minitest::Test
     end
   end
 
-  def test_create_counter_by_stdin
+  def test_create_counter_from_stdin
     expected = { lines: 1, words: 1, chars: 9 }
     StringIO.open("😄😄\n") do |io|
       assert_equal expected, create_counter(io)
@@ -74,14 +76,14 @@ class WCTest < Minitest::Test
   end
 
   class ViewTest < Minitest::Test
-    def test_wc_line
+    def test_displayed_wc_line_with_default_options_and_in_file
       expected = '       3       4      26 input.txt'
       counter = { lines: 3, words: 4, chars: 26 }
       file_name = 'input.txt'
       assert_equal expected, displayed_wc_line(counter, file_name)
     end
 
-    def test_wc_line2
+    def test_displayed_wc_line_with_one_option_and_in_file
       expected = '       3 input.txt'
       counter = { lines: 3, words: 4, chars: 26 }
       file_name = 'input.txt'
@@ -90,7 +92,7 @@ class WCTest < Minitest::Test
                                                visible_chars: false)
     end
 
-    def test_wc_line3
+    def test_displayed_wc_line_with_default_options_and_in_stdin
       expected = '       3       4      26'
       counter = { lines: 3, words: 4, chars: 26 }
       file_name = ''
