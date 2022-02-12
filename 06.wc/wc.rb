@@ -100,7 +100,7 @@ def display_wc_lines(file_counters, wc_opts)
   end
 end
 
-def collect_file(pattern)
+def collect_file_name_list(pattern)
   Dir.glob(pattern).filter { |name| File.file?(name) }
 end
 
@@ -115,7 +115,7 @@ def wc
   # オプション指定がない場合はデフォルトオプションを使用。
   wc_opts.transform_values! { |_v| true } unless wc_opts.values.all?
 
-  file_name_list = ARGV.map { |pattern| collect_file(pattern) }.flatten
+  file_name_list = ARGV.map { |pattern| collect_file_name_list(pattern) }.flatten
 
   file_counters = create_file_counters(file_name_list)
 
