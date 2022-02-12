@@ -4,25 +4,26 @@ require_relative '../wc'
 
 class WCTest < Minitest::Test
   class WordsCounterTest < Minitest::Test
-    def test_制御文字で区切られた文字数をカウント
+    def test_単語の間に区切り文字がある場合に区切られた単語数をカウントする
       line = "hoge fuga\nhoge\tあ"
       assert_equal 4, count_words(line)
     end
 
-    def test_文字列が制御文字のみの場合に文字数0でカウント
+    def test_先頭に区切り文字があっても単語の間に区切り文字がある場合に区切られた単語数をカウントする
+      line = " hoge fuga\nhoge\tあ"
+      assert_equal 4, count_words(line)
+    end
+
+    def test_区切り文字のみある場合に単語数をカウントしない
       line = "\n\t    "
       assert_equal 0, count_words(line)
     end
 
-    def test_連続した制御文字は１つの制御文字として文字数をカウント
-      line = "hoge  fuga\n\nhoge"
-      assert_equal 3, count_words(line)
+    def test_単語の間に連続した区切り文字がある場合に連續した区切り文字は1つの区切り文字として扱い、区切られた文字数をカウントする
+      line = "hoge fuga\n\nhoge\tあ"
+      assert_equal 4, count_words(line)
     end
 
-    def test_先頭が空白文字で始まる場合に文字数をカウント
-      line = " hoge  fuga\n hoge"
-      assert_equal 3, count_words(line)
-    end
   end
 
   class LinesCounterTest < Minitest::Test
