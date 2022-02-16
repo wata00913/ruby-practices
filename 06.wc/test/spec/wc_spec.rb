@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative '../../wc'
 
 RSpec.describe 'WordsCounter' do
@@ -71,17 +73,13 @@ RSpec.describe 'WCModel' do
     context '入力がファイルの場合' do
       it 'カウンターを作成する' do
         input_path = './input.txt'
-        File.open(input_path) do |f|
-          expect(create_counter(f)).to eq({ lines: 3, words: 4, chars: 26 })
-        end
+        File.open(input_path) { |f| expect(create_counter(f)).to eq({ lines: 3, words: 4, chars: 26 }) }
       end
     end
 
     context '入力が標準入力の場合' do
       it 'カウンターを作成する' do
-        StringIO.open("😄😄\n") do |io|
-          expect(create_counter(io)).to eq({ lines: 1, words: 1, chars: 9 })
-        end
+        StringIO.open("😄😄\n") { |io| expect(create_counter(io)).to eq({ lines: 1, words: 1, chars: 9 }) }
       end
     end
   end
