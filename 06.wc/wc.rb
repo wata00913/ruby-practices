@@ -113,7 +113,7 @@ def wc
   end.parse!(ARGV)
 
   # オプション指定がない場合はデフォルトオプションを使用。
-  wc_opts.transform_values! { |_v| true } unless wc_opts.values.all?
+  wc_opts.transform_values! { |_v| true } unless wc_opts.values.any?
 
   file_name_list = ARGV.map { |pattern| collect_file_name_list(pattern) }.flatten
 
