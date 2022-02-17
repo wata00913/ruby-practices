@@ -40,14 +40,14 @@ RSpec.describe 'count_lines' do
   context 'when there are newlines in string' do
     it 'return number of newlines' do
       str = "hoge\nf\n"
-      expect(count_lines(str))
+      expect(count_lines(str)).to eq 2
     end
   end
 
   context 'when there is no newline in string' do
     it 'return 0' do
       str = ''
-      expect(count_lines(str))
+      expect(count_lines(str)).to eq 0
     end
   end
 end
