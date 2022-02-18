@@ -45,14 +45,14 @@ end
 
 # ファイルごとのCounterを作成する
 # ファイル指定がない場合は、標準入力のCounterを作成する
-# @param [Array] file_name_list ファイル名を要素とする配列
+# @param [Array] file_names ファイル名を要素とする配列
 # @return [Array] ファイルごとのCounterを要素とする配列
 # 具体的な要素は、ファイル名とそのファイルのCounterを構成するHash
-def create_file_counters(file_name_list)
-  if file_name_list.empty?
+def create_file_counters(file_names)
+  if file_names.empty?
     [{ name: '', counter: create_counter($stdin) }]
   else
-    file_name_list.map do |file_name|
+    file_names.map do |file_name|
       File.open(file_name) { |f| { name: file_name, counter: create_counter(f) } }
     end
   end
@@ -100,7 +100,7 @@ def display_wc_lines(file_counters, wc_opts)
   end
 end
 
-def collect_file_name_list(pattern)
+def collect_file_names(pattern)
   Dir.glob(pattern).filter { |name| File.file?(name) }
 end
 
@@ -115,9 +115,9 @@ def wc
   # オプション指定がない場合はデフォルトオプションを使用。
   wc_opts.transform_values! { |_v| true } unless wc_opts.values.any?
 
-  file_name_list = ARGV.map { |pattern| collect_file_name_list(pattern) }.flatten
+  file_names = ARGV.map { |pattern| collect_file_names(pattern) }.flatten
 
-  file_counters = create_file_counters(file_name_list)
+  file_counters = create_file_counters(file_names)
 
   if file_counters.size > 1
     counters = file_counters.map { |fc| fc[:counter] }
