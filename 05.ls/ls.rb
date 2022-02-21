@@ -180,7 +180,7 @@ def display_file_info_line(file_info, field_to_max_char_length)
     displayed_field_inline_element(file_info[:owner_name], left_padding1, right_padding, 'rjust', field_to_max_char_length[:owner_name]),
     displayed_field_inline_element(file_info[:group_name], left_padding2, right_padding, 'rjust', field_to_max_char_length[:group_name]),
     displayed_field_inline_element(file_info[:bytes].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:bytes]),
-    displayed_field_inline_element(file_info[:month].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:month]),
+    displayed_field_inline_element(file_info[:month].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:month]),
     displayed_field_inline_element(file_info[:day].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:day]),
     displayed_field_inline_element(file_info[:hour_min], left_padding1, right_padding, 'rjust', field_to_max_char_length[:hour_min]),
     displayed_field_inline_element(file_info[:filename], left_padding1, right_padding, 'ljust', field_to_max_char_length[:filename])
