@@ -62,6 +62,33 @@ class FilesTest < Minitest::Test
     def test_return_long_format_three_permissions_when_octal_value_is421
       assert_equal 'r---w---x', format_three_permissions_bits_to_ls_long('421'.to_i(8))
     end
+
+    def test_return_line_file_stat_long_format
+      file_info = { file_mode: 'drwxr-xr-x',
+                    number_of_links: 5,
+                    owner_name: 'sakamotoryuuji',
+                    group_name: 'staff',
+                    bytes: 160,
+                    month: 2,
+                    day: 22,
+                    hour_min: '00:18',
+                    filename: '..',
+                    blocks: 0 }
+
+      field_to_max_char_length = { file_mode: 10,
+                                   number_of_links: 1,
+                                   owner_name: 14,
+                                   group_name: 5,
+                                   bytes: 3,
+                                   month: 1,
+                                   day: 2,
+                                   hour_min: 5,
+                                   filename: 7,
+                                   blocks: 0 }
+
+      expected = 'drwxr-xr-x  5 sakamotoryuuji  staff  160  2 22 00:18 ..'
+      assert_equal expected, displayed_file_info_line(file_info, field_to_max_char_length)
+    end
   end
 
   class LsFilesTest < Minitest::Test

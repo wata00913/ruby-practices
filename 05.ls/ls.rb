@@ -180,12 +180,30 @@ def display_file_info_line(file_info, field_to_max_char_length)
     displayed_field_inline_element(file_info[:owner_name], left_padding1, right_padding, 'rjust', field_to_max_char_length[:owner_name]),
     displayed_field_inline_element(file_info[:group_name], left_padding2, right_padding, 'rjust', field_to_max_char_length[:group_name]),
     displayed_field_inline_element(file_info[:bytes].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:bytes]),
-    displayed_field_inline_element(file_info[:month].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:month]),
+    displayed_field_inline_element(file_info[:month].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:month]),
     displayed_field_inline_element(file_info[:day].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:day]),
     displayed_field_inline_element(file_info[:hour_min], left_padding1, right_padding, 'rjust', field_to_max_char_length[:hour_min]),
     displayed_field_inline_element(file_info[:filename], left_padding1, right_padding, 'ljust', field_to_max_char_length[:filename])
   ]
   puts inline_elements.join
+end
+
+def displayed_file_info_line(file_info, field_to_max_char_length)
+  left_padding2 = 2
+  left_padding1 = 1
+  right_padding = 0
+  inline_elements = [
+    file_info[:file_mode],
+    displayed_field_inline_element(file_info[:number_of_links].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:number_of_links]),
+    displayed_field_inline_element(file_info[:owner_name], left_padding1, right_padding, 'rjust', field_to_max_char_length[:owner_name]),
+    displayed_field_inline_element(file_info[:group_name], left_padding2, right_padding, 'rjust', field_to_max_char_length[:group_name]),
+    displayed_field_inline_element(file_info[:bytes].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:bytes]),
+    displayed_field_inline_element(file_info[:month].to_s, left_padding2, right_padding, 'rjust', field_to_max_char_length[:month]),
+    displayed_field_inline_element(file_info[:day].to_s, left_padding1, right_padding, 'rjust', field_to_max_char_length[:day]),
+    displayed_field_inline_element(file_info[:hour_min], left_padding1, right_padding, 'rjust', field_to_max_char_length[:hour_min]),
+    " #{file_info[:filename]}"
+  ]
+  inline_elements.join
 end
 
 def displayed_field_inline_element(text, left_padding, right_padding, align, width)
@@ -207,7 +225,7 @@ def display_file_info_lines(file_info_list, total_blocks)
   puts "total #{total_blocks}"
   field_to_max_char_length = find_field_to_max_char_length(file_info_list)
   file_info_list.each do |file_info|
-    display_file_info_line(file_info, field_to_max_char_length)
+    puts displayed_file_info_line(file_info, field_to_max_char_length)
   end
 end
 
