@@ -59,7 +59,7 @@ def create_file_counters(file_names)
 end
 
 # 複数のCounterの行数、単語数、文字数ごとに合計したCounterを返す
-# @param [Array] str 文字列
+# @param [Array] counters counterを要素とする配列
 # @return [Hash] ファイルの行数、単語数、文字数を構成するHash
 def total_count(counters)
   total_lines = 0
@@ -78,6 +78,7 @@ def displayed_wc_line(counter, file_name = '',
                       visible_words: true,
                       visible_chars: true)
   l_padding = 1
+  # 行数、単語数、文字数の幅。wcコマンドを数回試行した中で、7がデフォルトの幅と確認したので、同様に7で設定。
   width = 7
   elements = []
   # joinで空白は作成しない
