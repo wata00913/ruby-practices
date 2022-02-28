@@ -32,15 +32,8 @@ end
 # @param [IO] io IO、またはIOのeach_lineメソッドを継承したインスタンス変数(Fileクラスなど)
 # @return [Hash] ファイルの行数、単語数、文字数を構成するHash
 def create_counter(io)
-  total_lines = 0
-  total_words = 0
-  total_chars = 0
-  io.each_line do |line|
-    total_lines += count_lines(line)
-    total_words += count_words(line)
-    total_chars += count_chars(line)
-  end
-  { lines: total_lines, words: total_words, chars: total_chars }
+  str = io.read
+  { lines: count_lines(str), words: count_words(str), chars: count_chars(str) }
 end
 
 # ファイルごとのCounterを作成する
