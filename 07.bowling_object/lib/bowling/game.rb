@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative './frame'
 
 class Game
-  MAX_PINS = 10
-  MAX_FRAME = 10
+  include Bowling
 
   def initialize(shots)
     initi_frames(shots.clone)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Frame
-  MAX_PINS = 10
+  include Bowling
 
   def initialize(shots)
     @shots = shots

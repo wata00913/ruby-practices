@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'minitest/autorun'
-require_relative '../frame'
+require_relative '../lib/bowling'
 
 class FrameTest < MiniTest::Test
   NORMAL_SHOTS = [6, 3].freeze
