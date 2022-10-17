@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-
 class Game
   include Bowling
 
   def initialize(shots)
-    initi_frames(shots.clone)
+    init_frames(shots)
   end
 
   def total_score
     @frames.each_with_index.sum do |f, idx|
-      idx == MAX_FRAME - 1 ? f.score : score_with_bonus(f, idx)
+      score_with_bonus(f, idx)
     end
   end
 
+  # 次の投球が最終フレームかどうか
   def final?
     @frames.size + 1 == MAX_FRAME
   end
@@ -21,7 +21,9 @@ class Game
   private
 
   def score_with_bonus(frame, idx)
-    bonus_score = if frame.spare?
+    bonus_score = if idx == MAX_FRAME - 1
+                    0
+                  elsif frame.spare?
                     spare_bonus_score(idx)
                   elsif frame.strike?
                     strike_bonus_score(idx)
@@ -46,17 +48,19 @@ class Game
     @frames[idx + 1].to_shots.first
   end
 
-  def initi_frames(shots)
+  def init_frames(shots)
     @frames = []
 
-    until shots.empty?
-      len = if final?
-              shots.size
-            else
-              shots.first == MAX_PINS ? 1 : 2
-            end
+    tmp_shots = shots.clone
+    @frames << Frame.new(slice_for_next_frame!(tmp_shots)) until tmp_shots.empty?
+  end
 
-      @frames << Frame.new(shots.slice!(0, len))
-    end
+  def slice_for_next_frame!(shots)
+    len = if final?
+            shots.size
+          else
+            shots.first == MAX_PINS ? 1 : 2
+          end
+    shots.slice!(0, len)
   end
 end
