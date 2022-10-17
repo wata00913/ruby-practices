@@ -37,7 +37,7 @@ class Game
 
     # ボーナス対象フレームの次フレームの投球数が1の場合は、
     # さらに次のフレームのshotsを追加する
-    shots.unshift(@frames[idx + 2].to_shots).flatten! if shots.size == 1
+    shots.push(@frames[idx + 2].to_shots).flatten! if shots.size == 1
 
     shots.take(2).sum
   end
