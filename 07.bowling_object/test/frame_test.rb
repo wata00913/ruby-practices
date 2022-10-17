@@ -43,26 +43,4 @@ class FrameTest < MiniTest::Test
       assert_equal false, f.strike?
     end
   end
-
-  class BonusScoreTest < MiniTest::Test
-    def test_spare_bonus_score_when_spare
-      f = Frame.new(SPARE_SHOTS)
-      assert_equal 6, f.bonus_score(:spare)
-    end
-
-    def test_spare_bonus_score_when_strike
-      f = Frame.new(STRIKE_SHOTS)
-      assert_equal 10, f.bonus_score(:spare)
-    end
-
-    def test_strike_bonus_score_when_spare
-      f = Frame.new(SPARE_SHOTS)
-      assert_equal 10, f.bonus_score(:strike)
-    end
-
-    def test_strike_bonus_score_when_strike
-      f = Frame.new(STRIKE_SHOTS)
-      assert_equal 10, f.bonus_score(:strike)
-    end
-  end
 end

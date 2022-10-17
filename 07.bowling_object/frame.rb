@@ -11,13 +11,8 @@ class Frame
     @shots.sum
   end
 
-  def bonus_score(type)
-    case type
-    when :spare
-      @shots.first
-    when :strike
-      score
-    end
+  def to_shots
+    @shots.clone
   end
 
   def spare?
