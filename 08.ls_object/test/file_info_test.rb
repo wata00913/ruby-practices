@@ -25,10 +25,10 @@ class FileInfoTest < MiniTest::Test
 
     expected = {
       mode: 'drwxr-xr-x',
-      number_of_links: 4,
+      number_of_links: 12,
       owner_name: 'sakamotoryuuji',
       group_name: 'staff',
-      bytes: 128,
+      bytes: 384,
       mtime: Time.new(2021, 11, 1, 11, 50),
       filename: '.',
       blocks: 0
