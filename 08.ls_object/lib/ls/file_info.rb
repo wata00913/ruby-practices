@@ -39,15 +39,15 @@ module Ls
       to_symbolic_mode(entry: @stat.ftype, permissions: str_mode[-3..])
     end
 
-    def number_of_links
+    def nlink
       @stat.nlink
     end
 
-    def owner_name
+    def owner
       Etc.getpwuid(@stat.uid).name
     end
 
-    def group_name
+    def group
       Etc.getgrgid(@stat.gid).name
     end
 
@@ -66,12 +66,12 @@ module Ls
     def to_h
       {
         mode: mode,
-        number_of_links: number_of_links,
-        owner_name: owner_name,
-        group_name: group_name,
+        nlink: nlink,
+        owner: owner,
+        group: group,
         bytes: bytes,
         mtime: mtime,
-        filename: name,
+        name: name,
         blocks: blocks
       }
     end
