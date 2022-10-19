@@ -25,12 +25,12 @@ class FileInfoTest < MiniTest::Test
 
     expected = {
       mode: 'drwxr-xr-x',
-      number_of_links: 12,
-      owner_name: 'sakamotoryuuji',
-      group_name: 'staff',
+      nlink: 12,
+      owner: 'sakamotoryuuji',
+      group: 'staff',
       bytes: 384,
       mtime: Time.new(2021, 11, 1, 11, 50),
-      filename: '.',
+      name: '.',
       blocks: 0
     }
     File::Stat.stub_any_instance(:mtime, Time.new(2021, 11, 1, 11, 50)) do
