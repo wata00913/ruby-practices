@@ -5,7 +5,7 @@ module Ls
     def initialize(options)
       @options = options
 
-      @file_info_list = Ls::FileInfoList.new(**@options.slice(:paths, :dot))
+      @file_info_list = Ls::FileInfoList.create_from(**@options.slice(:paths, :dot))
     end
 
     def to_lines
