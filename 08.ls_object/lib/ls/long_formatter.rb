@@ -22,11 +22,8 @@ module Ls
     private
 
     def info_lines(max_char_sizes)
-      lines = []
-      @file_info_list.each_order_by(:name, desc: @options[:reverse]) do |info|
-        lines << info_line(info, **max_char_sizes)
-      end
-      lines
+      @file_info_list.sort_by!(:name, desc: @options[:reverse])
+      @file_info_list.map { |info| info_line(info, **max_char_sizes) }
     end
 
     def info_line(info, max_nlink:, max_owner:, max_group:, max_bytes:)

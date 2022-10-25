@@ -9,7 +9,8 @@ module Ls
     end
 
     def to_lines
-      names = @file_info_list.names(**@options.slice(:reverse))
+      @file_info_list.sort_by!(:name, desc: @options[:reverse])
+      names = @file_info_list.extract(:name)
 
       width = adjust_width_to_max_name_length(names)
       names_in_transposed = to_transposed_matrix_format(names, @options[:col])
