@@ -22,11 +22,9 @@ def parse_options
   opts
 end
 
-def ls
-  opts = parse_options
+def ls(opts)
   formatter = opts[:long] ? Ls::LongFormatter.new(opts) : Ls::ShortFormatter.new(opts)
-
-  puts formatter.to_lines.join("\n")
+  formatter.to_lines.join("\n")
 end
 
-ls if __FILE__ == $PROGRAM_NAME
+puts ls(parse_options) if __FILE__ == $PROGRAM_NAME
