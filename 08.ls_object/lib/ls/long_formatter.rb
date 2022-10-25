@@ -13,28 +13,28 @@ module Ls
         ["max_#{attr}".to_sym, @file_info_list.find_max(attr).to_s.size]
       end.to_h
 
+      @file_info_list.sort_by!(:name, desc: @options[:reverse])
       [
         "total #{@file_info_list.total_blocks}",
-        *info_lines(**max_char_sizes)
+        *lines(@file_info_list, **max_char_sizes)
       ]
     end
 
     private
 
-    def info_lines(max_char_sizes)
-      @file_info_list.sort_by!(:name, desc: @options[:reverse])
-      @file_info_list.map { |info| info_line(info, **max_char_sizes) }
+    def lines(file_info_list, max_char_sizes)
+      file_info_list.map { |finfo| line(finfo, **max_char_sizes) }
     end
 
-    def info_line(info, max_nlink:, max_owner:, max_group:, max_bytes:)
+    def line(file_info, max_nlink:, max_owner:, max_group:, max_bytes:)
       [
-        info.mode,
-        "  #{info.nlink.to_s.rjust(max_nlink)}",
-        " #{info.owner.rjust(max_owner)}",
-        "  #{info.group.rjust(max_group)}",
-        "  #{info.bytes.to_s.rjust(max_bytes)}",
-        " #{info.mtime.strftime('%m %d %H:%M')}",
-        " #{info.name}"
+        file_info.mode,
+        "  #{file_info.nlink.to_s.rjust(max_nlink)}",
+        " #{file_info.owner.rjust(max_owner)}",
+        "  #{file_info.group.rjust(max_group)}",
+        "  #{file_info.bytes.to_s.rjust(max_bytes)}",
+        " #{file_info.mtime.strftime('%m %d %H:%M')}",
+        " #{file_info.name}"
       ].join
     end
   end

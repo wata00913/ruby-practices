@@ -63,19 +63,6 @@ module Ls
       @stat.blocks
     end
 
-    def to_h
-      {
-        mode: mode,
-        nlink: nlink,
-        owner: owner,
-        group: group,
-        bytes: bytes,
-        mtime: mtime,
-        name: name,
-        blocks: blocks
-      }
-    end
-
     private
 
     def to_symbolic_mode(entry:, permissions:)
