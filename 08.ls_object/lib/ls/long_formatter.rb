@@ -4,17 +4,17 @@ module Ls
   class LongFormatter
     def initialize(options)
       @options = options
-      @ls_files = Ls::Files.new(**@options.slice(:paths, :dot))
+      @file_info_list = Ls::FileInfoList.new(**@options.slice(:paths, :dot))
     end
 
     def to_lines
       max_char_sizes = %i[nlink owner group bytes].map do |attr|
         # 数値のattrがあるため文字列に変換をしてサイズを
-        ["max_#{attr}".to_sym, @ls_files.find_max(attr).to_s.size]
+        ["max_#{attr}".to_sym, @file_info_list.find_max(attr).to_s.size]
       end.to_h
 
       [
-        "total #{@ls_files.total_blocks}",
+        "total #{@file_info_list.total_blocks}",
         *info_lines(**max_char_sizes)
       ]
     end
@@ -23,7 +23,7 @@ module Ls
 
     def info_lines(max_char_sizes)
       lines = []
-      @ls_files.each_order_by(:name, desc: @options[:reverse]) do |info|
+      @file_info_list.each_order_by(:name, desc: @options[:reverse]) do |info|
         lines << info_line(info, **max_char_sizes)
       end
       lines

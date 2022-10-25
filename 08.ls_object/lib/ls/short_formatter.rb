@@ -5,11 +5,11 @@ module Ls
     def initialize(options)
       @options = options
 
-      @ls_files = Ls::Files.new(**@options.slice(:paths, :dot))
+      @file_info_list = Ls::FileInfoList.new(**@options.slice(:paths, :dot))
     end
 
     def to_lines
-      names = @ls_files.names(**@options.slice(:reverse))
+      names = @file_info_list.names(**@options.slice(:reverse))
 
       width = adjust_width_to_max_name_length(names)
       names_in_transposed = to_transposed_matrix_format(names, @options[:col])
