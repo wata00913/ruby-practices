@@ -2,6 +2,8 @@
 
 module Ls
   class Files
+    attr_reader :infos
+
     def initialize(paths: [], dot: false)
       target_files = if paths.empty?
                        files_in(dot: dot)
@@ -16,6 +18,20 @@ module Ls
     def names(reverse: false)
       ns = @infos.map(&:name)
       reverse ? ns.reverse : ns
+    end
+
+    def total_blocks
+      @infos.sum(&:blocks)
+    end
+
+    def find_max(attr)
+      @infos.map(&attr).max
+    end
+
+    def each_order_by(attr, desc: false, &block)
+      infos = @infos.sort_by(&attr)
+      infos = infos.reverse if desc
+      infos.each(&block)
     end
 
     private
