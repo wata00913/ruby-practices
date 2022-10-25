@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 module Ls
   class FileInfoList
+    extend Forwardable
     attr_reader :infos
+
+    def_delegator :@infos, :map, 'map'
 
     def initialize(paths: [], dot: false)
       target_files = if paths.empty?
@@ -15,23 +20,21 @@ module Ls
       @infos = target_files.map { |f| Ls::FileInfo.new(f) }
     end
 
-    def names(reverse: false)
-      ns = @infos.map(&:name)
-      reverse ? ns.reverse : ns
-    end
-
     def total_blocks
       @infos.sum(&:blocks)
+    end
+
+    def extract(attr)
+      @infos.map(&attr)
     end
 
     def find_max(attr)
       @infos.map(&attr).max
     end
 
-    def each_order_by(attr, desc: false, &block)
-      infos = @infos.sort_by(&attr)
-      infos = infos.reverse if desc
-      infos.each(&block)
+    def sort_by!(attr, desc: false)
+      @infos.sort_by!(&attr)
+      @infos.reverse! if desc
     end
 
     private
