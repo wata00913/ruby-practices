@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Ls
-  class Files
+  class FileInfoList
     attr_reader :infos
 
     def initialize(paths: [], dot: false)
