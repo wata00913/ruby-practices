@@ -5,7 +5,6 @@ require 'forwardable'
 module Ls
   class FileInfoList
     extend Forwardable
-    attr_reader :infos
 
     def_delegator :@infos, :map, 'map'
 
